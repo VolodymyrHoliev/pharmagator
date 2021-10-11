@@ -23,40 +23,37 @@ public class MedicineController {
         return ResponseEntity.ok(medicineRepository.findAll());
     }
 
-    @GetMapping("/getById")
-    public ResponseEntity<Medicine> getById(@RequestParam Long id) {
-        return ResponseEntity.of(medicineRepository.findById(id));
+    @GetMapping("/{medicineId}")
+    public ResponseEntity<Medicine> getById(@PathVariable Long medicineId) {
+        return ResponseEntity.of(medicineRepository.findById(medicineId));
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<?> create(@RequestBody Medicine medicine) {
+    @PostMapping("/")
+    public ResponseEntity<Medicine> create(@RequestBody Medicine medicine) {
         return ResponseEntity.ok(medicineRepository.save(medicine));
     }
 
 
-    @GetMapping("/deleteById")
-    public ResponseEntity<?> deleteById(@RequestParam Long id) {
-        Optional<Medicine> optionalMedicine = medicineRepository.findById(id);
+    @DeleteMapping("/{medicineId}")
+    public ResponseEntity<Void> deleteById(@PathVariable Long medicineId) {
+        Optional<Medicine> optionalMedicine = medicineRepository.findById(medicineId);
         if (optionalMedicine.isPresent()) {
-            medicineRepository.deleteById(id);
-            return ResponseEntity.ok().build();
+            medicineRepository.deleteById(medicineId);
+            return ResponseEntity.noContent().build();
         } else {
             return ResponseEntity.notFound().build();
         }
     }
 
-    @PostMapping("/update")
-    public ResponseEntity<?> update(@RequestBody Medicine medicine) {
-        long id = medicine.getId();
-        Optional<Medicine> optionalById = medicineRepository.findById(id);
+    @PutMapping("/{medicineId}")
+    public ResponseEntity<Medicine> update(@PathVariable Long medicineId, @RequestBody Medicine medicine) {
+        Optional<Medicine> optionalById = medicineRepository.findById(medicineId);
         if (optionalById.isEmpty()) {
             return ResponseEntity.notFound().build();
         } else {
-            String titleUpdate = medicine.getTitle();
-            Medicine medicineById = optionalById.get();
-            medicineById.setTitle(titleUpdate);
-            medicineRepository.save(medicineById);
-            return ResponseEntity.ok().build();
+            medicine.setId(medicineId);
+            medicineRepository.save(medicine);
+            return ResponseEntity.ok(medicine);
         }
     }
 

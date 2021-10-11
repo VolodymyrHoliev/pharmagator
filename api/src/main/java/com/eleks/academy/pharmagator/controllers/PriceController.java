@@ -1,6 +1,7 @@
 package com.eleks.academy.pharmagator.controllers;
 
 import com.eleks.academy.pharmagator.entities.Price;
+import com.eleks.academy.pharmagator.entities.PriceId;
 import com.eleks.academy.pharmagator.repositories.PriceRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -23,44 +24,43 @@ public class PriceController {
         return ResponseEntity.ok(priceRepository.findAll());
     }
 
-    @GetMapping("/getById")
-    public ResponseEntity<Price> getById(@RequestParam Long id) {
-        return ResponseEntity.of(priceRepository.findById(id));
+    @GetMapping("/{priceId}")
+    public ResponseEntity<Price> getById(@PathVariable PriceId priceId) {
+        return ResponseEntity.of(priceRepository.findById(priceId));
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> create(@RequestBody Price price) {
+    public ResponseEntity<Price> create(@RequestBody Price price) {
         return ResponseEntity.ok(priceRepository.save(price));
     }
 
-    @GetMapping("/deleteById")
-    public ResponseEntity<?> deleteById(@RequestParam Long id) {
-        Optional<Price> optionalPrice = priceRepository.findById(id);
+    @DeleteMapping("/pharmacies/{pharmacyId}/medicines/{medicineId}")
+    public ResponseEntity<Void> deleteById(@PathVariable Long pharmacyId,@PathVariable Long medicineId) {
+        PriceId priceId = new PriceId();
+        priceId.setPharmacyId(pharmacyId);
+        priceId.setMedicineId(medicineId);
+        Optional<Price> optionalPrice = priceRepository.findById(priceId);
         if (optionalPrice.isPresent()) {
-            priceRepository.deleteById(id);
-            return ResponseEntity.ok().build();
+            priceRepository.deleteById(priceId);
+            return ResponseEntity.noContent().build();
         } else {
             return ResponseEntity.notFound().build();
         }
     }
 
-    @PostMapping("/update")
-    public ResponseEntity<?> update(@RequestBody Price price) {
-        var medicineId = price.getMedicineId();
-        var pharmacyId = price.getPharmacyId();
+    @PutMapping("/{priceId}")
+    public ResponseEntity<Price> update(@PathVariable PriceId priceId, @RequestBody Price price) {
         Optional<Price> optionalById = priceRepository
-                .findByMedicineIdAndPharmacyId(medicineId, pharmacyId);
+                .findById(priceId);
         if (optionalById.isEmpty()) {
             return ResponseEntity.notFound().build();
         } else {
-            Price priceById = optionalById.get();
-            BigDecimal priceUpdate = price.getPrice();
-            String externalIdUpdate = price.getExternalId();
-            priceById.setPrice(priceUpdate);
-            priceById.setExternalId(externalIdUpdate);
-            priceById.setUpdatedAt(Instant.now());
-            priceRepository.save(priceById);
-            return ResponseEntity.ok().build();
+            long medicineId = priceId.getMedicineId();
+            price.setMedicineId(medicineId);
+            long pharmacyId = priceId.getPharmacyId();
+            price.setPharmacyId(pharmacyId);
+            priceRepository.save(price);
+            return ResponseEntity.ok(price);
         }
     }
 }
