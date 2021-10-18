@@ -8,8 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
-import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,7 +23,11 @@ public class PriceController {
     }
 
     @GetMapping("/pharmacies/{pharmacyId}/medicines/{medicineId}")
-    public ResponseEntity<Price> getById(@PathVariable PriceId priceId) {
+    public ResponseEntity<Price> getById(@PathVariable Long pharmacyId,
+                                         @PathVariable Long medicineId) {
+        PriceId priceId = new PriceId();
+        priceId.setMedicineId(medicineId);
+        priceId.setPharmacyId(pharmacyId);
         return ResponseEntity.of(priceRepository.findById(priceId));
     }
 
@@ -50,16 +52,18 @@ public class PriceController {
     }
 
     @PutMapping("/pharmacies/{pharmacyId}/medicines/{medicineId}")
-    public ResponseEntity<Price> update(@PathVariable PriceId priceId, @RequestBody Price price) {
+    public ResponseEntity<Price> update(@PathVariable Long pharmacyId,
+                                        @PathVariable Long medicineId, @RequestBody Price price) {
+        PriceId priceId = new PriceId();
+        priceId.setPharmacyId(pharmacyId);
+        priceId.setMedicineId(medicineId);
         Optional<Price> optionalById = priceRepository
                 .findById(priceId);
         if (optionalById.isEmpty()) {
             return ResponseEntity.notFound().build();
         } else {
-            long medicineId = priceId.getMedicineId();
-            price.setMedicineId(medicineId);
-            long pharmacyId = priceId.getPharmacyId();
             price.setPharmacyId(pharmacyId);
+            price.setMedicineId(medicineId);
             priceRepository.save(price);
             return ResponseEntity.ok(price);
         }
