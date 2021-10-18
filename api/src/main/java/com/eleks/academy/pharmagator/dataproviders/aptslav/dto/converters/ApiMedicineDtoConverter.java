@@ -1,22 +1,22 @@
 package com.eleks.academy.pharmagator.dataproviders.aptslav.dto.converters;
 
-import com.eleks.academy.pharmagator.dataproviders.aptslav.dto.MedicineApiDto;
-import com.eleks.academy.pharmagator.dataproviders.aptslav.dto.PriceDto;
+import com.eleks.academy.pharmagator.dataproviders.aptslav.dto.AptslavMedicineDto;
+import com.eleks.academy.pharmagator.dataproviders.aptslav.dto.AptslavPriceDto;
 import com.eleks.academy.pharmagator.dataproviders.dto.MedicineDto;
 import com.sun.istack.NotNull;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ApiMedicineDtoConverter implements ApiDtoConverter<MedicineApiDto> {
+public class ApiMedicineDtoConverter implements ApiDtoConverter<AptslavMedicineDto> {
     @Override
-    public MedicineDto toMedicineDto(@NotNull MedicineApiDto apiDto) {
+    public MedicineDto toMedicineDto(@NotNull AptslavMedicineDto apiDto) {
         String title = apiDto.getName();
-        PriceDto priceDto = apiDto.getPrice();
+        AptslavPriceDto aptslavPriceDto = apiDto.getPrice();
         long externalId = apiDto.getExternalId();
         return MedicineDto.builder()
                 .externalId(String.valueOf(externalId))
                 .title(title)
-                .price(priceDto.getMin())
+                .price(aptslavPriceDto.getMin())
                 .build();
     }
 }

@@ -28,11 +28,9 @@ public class Scheduler {
 
     @Scheduled(fixedDelay = 120, timeUnit = TimeUnit.SECONDS)
     public void schedule() {
-//        log.info("Scheduler started at {}", Instant.now());
-//        dataProvider.loadData().forEach(this::storeToDatabase);
         dataProviders.forEach(dataProvider -> {
             Stream<MedicineDto> medicineDtoStream = dataProvider.loadData();
-//            medicineDtoStream.forEach(this::storeToDatabase);
+            medicineDtoStream.forEach(System.out::println);
         });
     }
 

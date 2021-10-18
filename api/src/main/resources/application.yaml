@@ -12,3 +12,7 @@ pharmagator:
       base-url: https://aptslav.com.ua:3000/api/v1
       categories-url: /categories
       medicines-uri: /categories/87/products
+    apteka-ds:
+      url: https://api-int.apteka-ds.com.ua/api/v1
+      category-fetch-url: /category-menu
+      category-path: /cat-prods-by-page

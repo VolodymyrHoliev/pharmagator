@@ -1,9 +1,8 @@
 package com.eleks.academy.pharmagator.dataproviders.aptslav;
 
-import com.eleks.academy.pharmagator.converters.MedicineDtoConverter;
 import com.eleks.academy.pharmagator.dataproviders.DataProvider;
 import com.eleks.academy.pharmagator.dataproviders.aptslav.dto.ApiResponseBody;
-import com.eleks.academy.pharmagator.dataproviders.aptslav.dto.MedicineApiDto;
+import com.eleks.academy.pharmagator.dataproviders.aptslav.dto.AptslavMedicineDto;
 import com.eleks.academy.pharmagator.dataproviders.aptslav.dto.converters.ApiDtoConverter;
 import com.eleks.academy.pharmagator.dataproviders.dto.MedicineDto;
 import lombok.RequiredArgsConstructor;
@@ -20,21 +19,29 @@ import java.util.stream.Stream;
 @Service
 @Qualifier("aptslavDataProvider")
 public class AptslavDataProvider implements DataProvider {
-    private final WebClient webClient;
+
+    private final WebClient aptslavWebClient;
     @Value("${pharmagator.data-providers.aptslav.categories-url}")
     private String categoriesFetchUrl;
     @Value("${pharmagator.data-providers.aptslav.medicines-uri}")
     private String medicinesFetchUri;
-    private MedicineDtoConverter<MedicineDto> medicineDtoConverter;
-    private ApiDtoConverter<MedicineApiDto> apiDtoConverter;
+    private final ApiDtoConverter<AptslavMedicineDto> apiDtoConverter;
 
     @Override
     public Stream<MedicineDto> loadData() {
-       return fetchMedicines();
+        return fetchMedicines();
     }
 
-    private ApiResponseBody<MedicineApiDto> sendGetMedicinesRequest(long step, long skip) {
-        return webClient
+    /**
+     *
+     * @param step - how many objects we can retrieve,represents API`s 'take' parameter,
+     *             according to API max value is 100,default value is 5
+     * @param skip - how many objects we already have,represents API`s 'skip' parameter
+     * @return ApiResponseBody
+     * @see ApiResponseBody
+     */
+    private ApiResponseBody<AptslavMedicineDto> sendGetMedicinesRequest(int step, int skip) {
+        return aptslavWebClient
                 .get()
                 .uri(uriBuilder -> uriBuilder.path(medicinesFetchUri)
                         .queryParam("fields", "id,externalId,name,created")
@@ -43,22 +50,28 @@ public class AptslavDataProvider implements DataProvider {
                         .queryParam("inStock", true)
                         .build())
                 .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<ApiResponseBody<MedicineApiDto>>() {
+                .bodyToMono(new ParameterizedTypeReference<ApiResponseBody<AptslavMedicineDto>>() {
                 })
                 .block();
     }
 
+    /**
+     * Here in this method we`re sending GET requests to the API until we`ve read all available data
+     * While API`s 'take' parameter can`t be more than 100,we can`t fetch all available data in one
+     * request
+     * @return Stream<MedicineDto>
+     */
     private Stream<MedicineDto> fetchMedicines() {
-        Stream<MedicineApiDto> resultStream = Stream.empty();
-        long step = 10;
-        long stepCounter = 0;
-        ApiResponseBody<MedicineApiDto> initialResponse = sendGetMedicinesRequest(step, 0);
+        Stream<AptslavMedicineDto> resultStream = Stream.empty();
+        int step = 100;
+        int fetchedObjectsCounter = 0;
+        ApiResponseBody<AptslavMedicineDto> initialResponse = sendGetMedicinesRequest(step, 0);
         long dataSetCount = initialResponse.getCount();
-        List<MedicineApiDto> initialResponseData = initialResponse.getData();
+        List<AptslavMedicineDto> initialResponseData = initialResponse.getData();
         resultStream = Stream.concat(resultStream, initialResponseData.stream());
-        while (stepCounter <= dataSetCount) {
-            stepCounter += step;
-            List<MedicineApiDto> nextResponseData = sendGetMedicinesRequest(step, stepCounter).getData();
+        while (fetchedObjectsCounter <= dataSetCount) {
+            fetchedObjectsCounter += step;
+            List<AptslavMedicineDto> nextResponseData = sendGetMedicinesRequest(step, fetchedObjectsCounter).getData();
             if (nextResponseData.isEmpty()) {
                 break;
             } else {
@@ -66,7 +79,6 @@ public class AptslavDataProvider implements DataProvider {
             }
         }
         return resultStream
-                .map(medicineApiDto -> apiDtoConverter.toMedicineDto(medicineApiDto));
+                .map(apiDtoConverter::toMedicineDto);
     }
-
 }
