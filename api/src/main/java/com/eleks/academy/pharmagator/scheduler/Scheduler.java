@@ -1,5 +1,6 @@
 package com.eleks.academy.pharmagator.scheduler;
 
+import com.eleks.academy.pharmagator.converters.DtoMapper;
 import com.eleks.academy.pharmagator.converters.MedicineDtoConverter;
 import com.eleks.academy.pharmagator.dataproviders.DataProvider;
 import com.eleks.academy.pharmagator.dataproviders.dto.MedicineDto;
@@ -21,8 +22,7 @@ import java.util.stream.Stream;
 @Component
 public class Scheduler {
     private final List<DataProvider> dataProviders;
-    private final MedicineDtoConverter<Price> dtoToPriceConverter;
-    private final MedicineDtoConverter<Medicine> dtoToMedicineConverter;
+    private final DtoMapper dtoMapper;
     private final MedicineRepository medicineRepository;
     private final PriceRepository priceRepository;
 
@@ -30,13 +30,14 @@ public class Scheduler {
     public void schedule() {
         dataProviders.forEach(dataProvider -> {
             Stream<MedicineDto> medicineDtoStream = dataProvider.loadData();
-            medicineDtoStream.forEach(System.out::println);
+            medicineDtoStream
+                    .forEach(this::storeToDatabase);
         });
     }
 
     private void storeToDatabase(MedicineDto dto) {
-        Price price = dtoToPriceConverter.toEntity(dto);
-        Medicine medicine = dtoToMedicineConverter.toEntity(dto);
+        Price price = dtoMapper.toPriceEntity(dto);
+        Medicine medicine = dtoMapper.toMedicineEntity(dto);
 //            medicineRepository.save(medicine);
 //            priceRepository.save(price);
     }
