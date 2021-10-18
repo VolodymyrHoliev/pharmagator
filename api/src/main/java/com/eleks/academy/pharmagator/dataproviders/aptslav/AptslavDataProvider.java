@@ -1,8 +1,8 @@
 package com.eleks.academy.pharmagator.dataproviders.aptslav;
 
 import com.eleks.academy.pharmagator.dataproviders.DataProvider;
-import com.eleks.academy.pharmagator.dataproviders.aptslav.dto.AptslavResponseBody;
 import com.eleks.academy.pharmagator.dataproviders.aptslav.dto.AptslavMedicineDto;
+import com.eleks.academy.pharmagator.dataproviders.aptslav.dto.AptslavResponseBody;
 import com.eleks.academy.pharmagator.dataproviders.aptslav.dto.converters.ApiDtoConverter;
 import com.eleks.academy.pharmagator.dataproviders.dto.MedicineDto;
 import lombok.RequiredArgsConstructor;
@@ -19,12 +19,14 @@ import java.util.stream.Stream;
 @Service
 @Qualifier("aptslavDataProvider")
 public class AptslavDataProvider implements DataProvider {
-
-    private final WebClient aptslavWebClient;
     @Value("${pharmagator.data-providers.aptslav.categories-url}")
     private String categoriesFetchUrl;
     @Value("${pharmagator.data-providers.aptslav.medicines-uri}")
     private String medicinesFetchUri;
+    @Value("${pharmagator.data-providers.aptslav.medicineLinkTemplate}")
+    private String medicineLinkTemplate;
+
+    private final WebClient aptslavWebClient;
     private final ApiDtoConverter<AptslavMedicineDto> apiDtoConverter;
 
     @Override
@@ -32,27 +34,6 @@ public class AptslavDataProvider implements DataProvider {
         return fetchMedicines();
     }
 
-    /**
-     * @param step - how many objects we can retrieve,represents API`s 'take' parameter,
-     *             according to API max value is 100,default value is 5
-     * @param skip - how many objects we already have,represents API`s 'skip' parameter
-     * @return ApiResponseBody
-     * @see AptslavResponseBody
-     */
-    private AptslavResponseBody<AptslavMedicineDto> sendGetMedicinesRequest(int step, int skip) {
-        return aptslavWebClient
-                .get()
-                .uri(uriBuilder -> uriBuilder.path(medicinesFetchUri)
-                        .queryParam("fields", "id,externalId,name,created")
-                        .queryParam("take", step)
-                        .queryParam("skip", skip)
-                        .queryParam("inStock", true)
-                        .build())
-                .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<AptslavResponseBody<AptslavMedicineDto>>() {
-                })
-                .block();
-    }
 
     /**
      * Here in this method we`re sending GET requests to the API until we`ve read all available data
@@ -72,7 +53,8 @@ public class AptslavDataProvider implements DataProvider {
         resultStream = Stream.concat(resultStream, initialResponseData.stream());
         while (fetchedObjectsCounter <= dataSetCount) {
             fetchedObjectsCounter += step;
-            List<AptslavMedicineDto> nextResponseData = sendGetMedicinesRequest(step, fetchedObjectsCounter).getData();
+            List<AptslavMedicineDto> nextResponseData = sendGetMedicinesRequest(step, fetchedObjectsCounter)
+                    .getData();
             if (nextResponseData.isEmpty()) {
                 break;
             } else {
@@ -82,4 +64,28 @@ public class AptslavDataProvider implements DataProvider {
         return resultStream
                 .map(apiDtoConverter::toMedicineDto);
     }
+
+    /**
+     * @param step - how many objects we can retrieve,represents API`s 'take' parameter.
+     *             According to API, max value is 100,default value is 5
+     * @param skip - how many objects we already have,represents API`s 'skip' parameter
+     * @return AptslavResponseBody<AptslavMedicineDto>
+     * @see AptslavResponseBody
+     */
+    private AptslavResponseBody<AptslavMedicineDto> sendGetMedicinesRequest(int step, int skip) {
+        return aptslavWebClient
+                .get()
+                .uri(uriBuilder -> uriBuilder.path(medicinesFetchUri)
+                        .queryParam("fields", "id,externalId,name,created")
+                        .queryParam("take", step)
+                        .queryParam("skip", skip)
+                        .queryParam("inStock", true)
+                        .build())
+                .retrieve()
+                .bodyToMono(new ParameterizedTypeReference<AptslavResponseBody<AptslavMedicineDto>>() {
+                })
+                .block();
+    }
+
+
 }

@@ -3,6 +3,7 @@ package com.eleks.academy.pharmagator.config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.projection.SpelAwareProxyProjectionFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -58,6 +59,12 @@ public class DataProvidersConfig {
                 .defaultHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
                 .baseUrl(pharmacyRozetkaBaseUrl)
                 .build();
+    }
+
+    @Bean
+    public SpelAwareProxyProjectionFactory projectionFactory() {
+
+        return new SpelAwareProxyProjectionFactory();
     }
 
 }
