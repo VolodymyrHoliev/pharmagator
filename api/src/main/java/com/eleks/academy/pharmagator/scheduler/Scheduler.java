@@ -1,13 +1,8 @@
 package com.eleks.academy.pharmagator.scheduler;
 
-import com.eleks.academy.pharmagator.converters.DtoMapper;
-import com.eleks.academy.pharmagator.converters.MedicineDtoConverter;
 import com.eleks.academy.pharmagator.dataproviders.DataProvider;
 import com.eleks.academy.pharmagator.dataproviders.dto.MedicineDto;
-import com.eleks.academy.pharmagator.entities.Medicine;
-import com.eleks.academy.pharmagator.entities.Price;
-import com.eleks.academy.pharmagator.repositories.MedicineRepository;
-import com.eleks.academy.pharmagator.repositories.PriceRepository;
+import com.eleks.academy.pharmagator.repositories.MedicineDataService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -22,9 +17,7 @@ import java.util.stream.Stream;
 @Component
 public class Scheduler {
     private final List<DataProvider> dataProviders;
-    private final DtoMapper dtoMapper;
-    private final MedicineRepository medicineRepository;
-    private final PriceRepository priceRepository;
+    private final MedicineDataService medicineDataService;
 
     @Scheduled(fixedDelay = 120, timeUnit = TimeUnit.SECONDS)
     public void schedule() {
@@ -36,9 +29,8 @@ public class Scheduler {
     }
 
     private void storeToDatabase(MedicineDto dto) {
-        Price price = dtoMapper.toPriceEntity(dto);
-        Medicine medicine = dtoMapper.toMedicineEntity(dto);
-//            medicineRepository.save(medicine);
-//            priceRepository.save(price);
+
+//        medicineDataService.saveMedicine(dto);
+//        medicineDataService.savePrice(dto);
     }
 }

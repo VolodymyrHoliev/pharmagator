@@ -12,7 +12,7 @@ public class ApiMedicineDtoConverter implements ApiDtoConverter<AptslavMedicineD
     public MedicineDto toMedicineDto(@NotNull AptslavMedicineDto apiDto) {
         String title = apiDto.getName();
         AptslavPriceDto aptslavPriceDto = apiDto.getPrice();
-        long externalId = apiDto.getExternalId();
+        long externalId = apiDto.getId();
         return MedicineDto.builder()
                 .externalId(String.valueOf(externalId))
                 .title(title)
