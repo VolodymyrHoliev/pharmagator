@@ -21,7 +21,7 @@ public class PharmacyController {
         return ResponseEntity.ok(pharmacyRepository.findAll());
     }
 
-    @GetMapping("/pharmacyId")
+    @GetMapping("/{pharmacyId}")
     public ResponseEntity<Pharmacy> getById(@PathVariable Long pharmacyId) {
         return ResponseEntity.of(pharmacyRepository.findById(pharmacyId));
     }
@@ -45,7 +45,8 @@ public class PharmacyController {
 
 
     @PutMapping("/{pharmacyId}")
-    public ResponseEntity<Pharmacy> update(@PathVariable Long pharmacyId,@RequestBody Pharmacy pharmacy) {
+    public ResponseEntity<Pharmacy> update(@PathVariable Long pharmacyId,
+                                           @RequestBody Pharmacy pharmacy) {
         Optional<Pharmacy> optionalById = pharmacyRepository.findById(pharmacyId);
         if (optionalById.isEmpty()) {
             return ResponseEntity.notFound().build();

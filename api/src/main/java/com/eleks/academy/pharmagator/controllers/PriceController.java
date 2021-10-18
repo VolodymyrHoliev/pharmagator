@@ -24,18 +24,19 @@ public class PriceController {
         return ResponseEntity.ok(priceRepository.findAll());
     }
 
-    @GetMapping("/{priceId}")
+    @GetMapping("/pharmacies/{pharmacyId}/medicines/{medicineId}")
     public ResponseEntity<Price> getById(@PathVariable PriceId priceId) {
         return ResponseEntity.of(priceRepository.findById(priceId));
     }
 
-    @PostMapping("/create")
+    @PostMapping
     public ResponseEntity<Price> create(@RequestBody Price price) {
         return ResponseEntity.ok(priceRepository.save(price));
     }
 
     @DeleteMapping("/pharmacies/{pharmacyId}/medicines/{medicineId}")
-    public ResponseEntity<Void> deleteById(@PathVariable Long pharmacyId,@PathVariable Long medicineId) {
+    public ResponseEntity<Void> deleteById(@PathVariable Long pharmacyId,
+                                           @PathVariable Long medicineId) {
         PriceId priceId = new PriceId();
         priceId.setPharmacyId(pharmacyId);
         priceId.setMedicineId(medicineId);
@@ -48,7 +49,7 @@ public class PriceController {
         }
     }
 
-    @PutMapping("/{priceId}")
+    @PutMapping("/pharmacies/{pharmacyId}/medicines/{medicineId}")
     public ResponseEntity<Price> update(@PathVariable PriceId priceId, @RequestBody Price price) {
         Optional<Price> optionalById = priceRepository
                 .findById(priceId);
