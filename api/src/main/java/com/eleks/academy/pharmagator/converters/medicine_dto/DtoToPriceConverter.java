@@ -1,4 +1,4 @@
-package com.eleks.academy.pharmagator.converters;
+package com.eleks.academy.pharmagator.converters.medicine_dto;
 
 import com.eleks.academy.pharmagator.dataproviders.dto.MedicineDto;
 import com.eleks.academy.pharmagator.entities.Price;
