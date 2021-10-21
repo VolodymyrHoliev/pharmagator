@@ -1,6 +1,6 @@
 package com.eleks.academy.pharmagator.services;
 
-import com.eleks.academy.pharmagator.converters.medicine_dto.MedicineDtoMapper;
+import com.eleks.academy.pharmagator.converters.MedicineDtoMapper;
 import com.eleks.academy.pharmagator.dataproviders.dto.MedicineDto;
 import com.eleks.academy.pharmagator.entities.Medicine;
 import com.eleks.academy.pharmagator.entities.Pharmacy;
