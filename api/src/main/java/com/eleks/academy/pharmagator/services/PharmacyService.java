@@ -32,27 +32,27 @@ public class PharmacyService {
 
         Pharmacy pharmacy = mapper.toEntity(pharmacyRequest);
 
-        Pharmacy savedEntity = pharmacyRepository.save(pharmacy);
+        pharmacyRepository.save(pharmacy);
 
-        return projectionFactory.createProjection(PharmacyDto.class, savedEntity);
+        return projectionFactory.createProjection(PharmacyDto.class, pharmacy);
     }
 
     public PharmacyDto update(Long id, PharmacyRequest pharmacyRequest) {
 
-        Optional<PharmacyDto> dtoOptional = pharmacyRepository.findById(id, PharmacyDto.class);
+        Optional<Pharmacy> dtoOptional = pharmacyRepository.findById(id, Pharmacy.class);
 
         if (dtoOptional.isEmpty()) {
 
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, errorMessage);
         } else {
 
-            Pharmacy pharmacy = mapper.toEntity(pharmacyRequest);
+            Pharmacy pharmacy = dtoOptional.get();
 
             pharmacy.setId(id);
 
-            Pharmacy savedPharmacy = pharmacyRepository.save(pharmacy);
+            pharmacyRepository.save(pharmacy);
 
-            return projectionFactory.createProjection(PharmacyDto.class, savedPharmacy);
+            return projectionFactory.createProjection(PharmacyDto.class, pharmacy);
         }
     }
 

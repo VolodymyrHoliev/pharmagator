@@ -2,7 +2,9 @@ package com.eleks.academy.pharmagator.converters.request;
 
 import com.eleks.academy.pharmagator.controllers.requests.MedicineRequest;
 import com.eleks.academy.pharmagator.entities.Medicine;
+import org.springframework.stereotype.Component;
 
+@Component
 public class MedicineRequestMapper implements RequestToEntityConverter<MedicineRequest, Medicine> {
 
     @Override

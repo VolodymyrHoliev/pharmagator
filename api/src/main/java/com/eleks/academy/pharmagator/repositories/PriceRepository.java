@@ -21,8 +21,8 @@ public interface PriceRepository extends JpaRepository<Price, PriceId> {
 
     <T> List<T> findAll(Class<T> returnType);
 
-    <T> Optional<T> findAllByMedicineIdAndPharmacyId(Long medicineId,
-                                                     Long pharmacyId, Class<T> returnType);
+    <T> Optional<T> findByMedicineIdAndPharmacyId(Long medicineId,
+                                                  Long pharmacyId, Class<T> returnType);
 
 
 }
