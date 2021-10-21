@@ -41,6 +41,7 @@ public class PriceController {
     @DeleteMapping("/pharmacies/{pharmacyId}/medicines/{medicineId}")
     public ResponseEntity<Void> deleteById(@PathVariable Long pharmacyId,
                                            @PathVariable Long medicineId) {
+
         priceService.delete(medicineId, pharmacyId);
 
         return ResponseEntity.noContent().build();
