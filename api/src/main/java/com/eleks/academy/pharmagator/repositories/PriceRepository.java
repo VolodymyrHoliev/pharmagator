@@ -12,8 +12,6 @@ import java.util.Optional;
 @Repository
 public interface PriceRepository extends JpaRepository<Price, PriceId> {
 
-    boolean existsByMedicineIdAndPharmacyId(Long medicineId, Long pharmacyId);
-
     <T> Optional<T> deleteByMedicineIdAndPharmacyId(Long medicineId,
                                                     Long pharmacyId, Class<T> returnType);
     @Query("SELECT price FROM Price price")

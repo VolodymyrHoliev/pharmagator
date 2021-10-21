@@ -1,7 +1,8 @@
 package com.eleks.academy.pharmagator.entities;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -11,8 +12,9 @@ import java.math.BigDecimal;
 import java.time.Instant;
 
 @Entity
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "prices")
 @IdClass(PriceId.class)
 public class Price {
