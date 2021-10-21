@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -29,7 +30,7 @@ public class PharmacyController {
     }
 
     @PostMapping("/")
-    public PharmacyDto create( @RequestBody PharmacyRequest requestBody) {
+    public PharmacyDto create(@Valid @RequestBody PharmacyRequest requestBody) {
 
         return pharmacyService.save(requestBody);
     }
