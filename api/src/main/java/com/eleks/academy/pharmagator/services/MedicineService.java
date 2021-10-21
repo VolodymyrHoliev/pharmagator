@@ -1,17 +1,18 @@
+
 package com.eleks.academy.pharmagator.services;
 
 import com.eleks.academy.pharmagator.controllers.requests.MedicineRequest;
 import com.eleks.academy.pharmagator.converters.request.RequestToEntityConverter;
 import com.eleks.academy.pharmagator.entities.Medicine;
+import com.eleks.academy.pharmagator.exceptions.ObjectNotFoundException;
 import com.eleks.academy.pharmagator.projections.MedicineDto;
 import com.eleks.academy.pharmagator.repositories.MedicineRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.projection.ProjectionFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,48 +29,50 @@ public class MedicineService {
     @Value("${pharmagator.error-messages.pharmacy-not-found-by-id}")
     private String errorMessage;
 
-    public MedicineDto save(MedicineRequest medicineRequest) {
-
-        Medicine medicine = mapper.toEntity(medicineRequest);
-
-        Medicine savedEntity = medicineRepository.save(medicine);
-
-        return projectionFactory.createProjection(MedicineDto.class, savedEntity);
-    }
-
-    public MedicineDto update(Long id, MedicineRequest medicineRequest) {
-
-        Optional<MedicineDto> dtoOptional = medicineRepository.findById(id, MedicineDto.class);
-
-        if (dtoOptional.isEmpty()) {
-
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, errorMessage);
-        } else {
-
-            Medicine medicine = mapper.toEntity(medicineRequest);
-
-            medicine.setId(id);
-
-            Medicine savedMedicine = medicineRepository.save(medicine);
-
-            return projectionFactory.createProjection(MedicineDto.class, savedMedicine);
-        }
-    }
 
     public List<MedicineDto> findAll() {
 
         return medicineRepository.findAll(MedicineDto.class);
     }
 
-    public MedicineDto findById(Long id) {
+    public MedicineDto save(@NotNull MedicineRequest medicineRequest) {
 
-        return medicineRepository.findById(id, MedicineDto.class)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, errorMessage));
+        Medicine medicine = mapper.toEntity(medicineRequest);
+
+        medicineRepository.save(medicine);
+
+        return projectionFactory.createProjection(MedicineDto.class, medicine);
     }
 
-    public Medicine delete(Long pharmacyId) {
+    public MedicineDto update(@NotNull Long id, @NotNull MedicineRequest medicineRequest) {
 
-        return medicineRepository.findById(pharmacyId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, errorMessage));
+        Optional<MedicineDto> dtoOptional = medicineRepository.findById(id, MedicineDto.class);
+
+        if (dtoOptional.isEmpty()) {
+
+            throw new ObjectNotFoundException(errorMessage);
+        } else {
+
+            Medicine medicine = mapper.toEntity(medicineRequest);
+
+            medicine.setId(id);
+
+            medicineRepository.save(medicine);
+
+            return projectionFactory.createProjection(MedicineDto.class, medicine);
+        }
+    }
+
+    public MedicineDto findById(@NotNull Long id) {
+
+        return medicineRepository.findById(id, MedicineDto.class)
+                .orElseThrow(() -> new ObjectNotFoundException(errorMessage));
+    }
+
+    public void delete(@NotNull Long id) {
+
+        this.findById(id);
+
+        medicineRepository.deleteById(id);
     }
 }

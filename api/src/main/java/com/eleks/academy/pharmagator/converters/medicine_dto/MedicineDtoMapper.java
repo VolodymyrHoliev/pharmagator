@@ -9,7 +9,9 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class MedicineDtoMapper {
+
     private final MedicineDtoConverter<Medicine> medicineConverter;
+
     private final MedicineDtoConverter<Price> priceConverter;
 
     public Medicine toMedicineEntity(MedicineDto medicineDto) {

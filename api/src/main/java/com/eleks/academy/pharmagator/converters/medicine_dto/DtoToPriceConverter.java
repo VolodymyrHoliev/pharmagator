@@ -10,10 +10,16 @@ import java.time.Instant;
 public class DtoToPriceConverter implements MedicineDtoConverter<Price> {
     @Override
     public Price toEntity(MedicineDto dto) {
+
         Price price = new Price();
+
         price.setPrice(dto.getPrice());
+
         price.setExternalId(dto.getExternalId());
+
         price.setUpdatedAt(Instant.now());
+
         return price;
+
     }
 }

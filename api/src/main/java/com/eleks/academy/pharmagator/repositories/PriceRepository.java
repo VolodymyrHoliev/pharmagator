@@ -12,8 +12,8 @@ import java.util.Optional;
 @Repository
 public interface PriceRepository extends JpaRepository<Price, PriceId> {
 
-    <T> Optional<T> deleteByMedicineIdAndPharmacyId(Long medicineId,
-                                                    Long pharmacyId, Class<T> returnType);
+    void deleteByMedicineIdAndPharmacyId(Long medicineId,
+                                         Long pharmacyId);
     @Query("SELECT price FROM Price price")
     <T> List<T> findAll(Class<T> returnType);
 

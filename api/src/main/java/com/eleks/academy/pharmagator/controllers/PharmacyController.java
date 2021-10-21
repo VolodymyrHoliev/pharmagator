@@ -47,8 +47,9 @@ public class PharmacyController {
 
     @PutMapping("/{pharmacyId}")
     public PharmacyDto update(@PathVariable Long pharmacyId,
-                              @RequestBody PharmacyRequest requestBody) {
+                              @Valid @RequestBody PharmacyRequest requestBody) {
 
         return pharmacyService.update(pharmacyId, requestBody);
+
     }
 }

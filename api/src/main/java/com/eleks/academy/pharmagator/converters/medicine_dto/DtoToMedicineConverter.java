@@ -8,8 +8,12 @@ import org.springframework.stereotype.Component;
 public class DtoToMedicineConverter implements MedicineDtoConverter<Medicine> {
     @Override
     public Medicine toEntity(MedicineDto dto) {
+
         Medicine medicine = new Medicine();
+
         medicine.setTitle(dto.getTitle());
+
         return medicine;
+
     }
 }
