@@ -76,6 +76,7 @@ public class AptslavDataProvider implements DataProvider {
      * @see AptslavResponseBody
      */
     private AptslavResponseBody<AptslavMedicineDto> sendGetMedicinesRequest(int step, int skip) {
+
         return aptslavWebClient
                 .get()
                 .uri(uriBuilder -> uriBuilder.path(medicinesFetchUri)

@@ -1,5 +1,6 @@
 package com.eleks.academy.pharmagator.converters;
 
+import com.eleks.academy.pharmagator.converters.medicine_dto.MedicineDtoConverter;
 import com.eleks.academy.pharmagator.dataproviders.dto.MedicineDto;
 import com.eleks.academy.pharmagator.entities.Medicine;
 import com.eleks.academy.pharmagator.entities.Price;
@@ -8,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class DtoMapper {
+public class MedicineDtoMapper {
     private final MedicineDtoConverter<Medicine> medicineConverter;
     private final MedicineDtoConverter<Price> priceConverter;
 
