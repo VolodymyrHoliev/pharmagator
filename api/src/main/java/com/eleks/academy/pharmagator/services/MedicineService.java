@@ -67,9 +67,8 @@ public class MedicineService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, errorMessage));
     }
 
-    public Medicine delete(Long pharmacyId) {
+    public void delete(Long id) {
 
-        return medicineRepository.findById(pharmacyId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, errorMessage));
+         medicineRepository.deleteById(id);
     }
 }

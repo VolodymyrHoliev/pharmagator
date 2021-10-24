@@ -74,12 +74,9 @@ public class PriceService {
         }
     }
 
-    public PriceDto delete(Long medicineId, Long pharmacyId) {
+    public void delete(Long medicineId, Long pharmacyId) {
 
-        Optional<PriceDto> priceDtoOptional = priceRepository
-                .deleteByMedicineIdAndPharmacyId(medicineId, pharmacyId, PriceDto.class);
-
-        return priceDtoOptional
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, errorMessage));
+        priceRepository
+                .deleteByMedicineIdAndPharmacyId(medicineId, pharmacyId);
     }
 }

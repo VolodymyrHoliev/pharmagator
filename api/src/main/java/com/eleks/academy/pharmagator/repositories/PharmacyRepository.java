@@ -1,7 +1,6 @@
 package com.eleks.academy.pharmagator.repositories;
 
 import com.eleks.academy.pharmagator.entities.Pharmacy;
-import com.eleks.academy.pharmagator.projections.PharmacyDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -18,4 +17,5 @@ public interface PharmacyRepository extends JpaRepository<Pharmacy, Long> {
     <T> List<T> findAllPharmacies(Class<T> returnType);
 
     <T> Optional<T> findById(Long id, Class<T> returnType);
+
 }

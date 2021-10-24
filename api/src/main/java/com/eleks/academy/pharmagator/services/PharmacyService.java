@@ -67,9 +67,8 @@ public class PharmacyService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, errorMessage));
     }
 
-    public Pharmacy delete(Long pharmacyId) {
+    public void delete(Long pharmacyId) {
 
-        return pharmacyRepository.findById(pharmacyId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, errorMessage));
+        pharmacyRepository.deleteById(pharmacyId);
     }
 }

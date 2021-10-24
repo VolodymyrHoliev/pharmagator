@@ -4,7 +4,6 @@ import com.eleks.academy.pharmagator.dataproviders.DataProvider;
 import com.eleks.academy.pharmagator.dataproviders.dto.MedicineDto;
 import com.eleks.academy.pharmagator.dataproviders.ds.dto.DSCategoryDto;
 import com.eleks.academy.pharmagator.dataproviders.ds.dto.DSMedicineDto;
-import com.eleks.academy.pharmagator.dataproviders.dto.MedicinesResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;

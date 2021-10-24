@@ -14,13 +14,16 @@ import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.netty.http.client.HttpClient;
 
+
 @Configuration
 public class DataProvidersConfig {
 
     @Value("${pharmagator.data-providers.apteka-ds.url}")
     private String pharmacyDSBaseUrl;
+
     @Value("${pharmagator.data-providers.aptslav.base-url}")
     private String aptslavBaseUrl;
+
 
     @Bean(name = "pharmacyDSWebClient")
     public WebClient pharmacyDSWebClient() {
@@ -30,6 +33,7 @@ public class DataProvidersConfig {
                 .baseUrl(pharmacyDSBaseUrl)
                 .build();
     }
+
 
     @SneakyThrows
     @Bean(name = "aptslavWebClient")
