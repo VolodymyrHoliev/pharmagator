@@ -30,7 +30,7 @@ public class PriceController {
         return priceService.findById(medicineId, pharmacyId);
     }
 
-    @PostMapping
+    @PostMapping("/pharmacies/{pharmacyId}/medicines/{medicineId}")
     public PriceDto create(@PathVariable Long medicineId,
                            @PathVariable Long pharmacyId,
                            @RequestBody PriceRequest priceRequest) {
