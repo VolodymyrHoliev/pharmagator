@@ -31,9 +31,6 @@ public class PharmacyService {
 
     public PharmacyDto save(@NotNull PharmacyRequest pharmacyRequest) {
 
-        if(pharmacyRequest == null){
-            throw new IllegalArgumentException("Pharmacy request can`t be null");
-        }
         Pharmacy pharmacy = mapper.toEntity(pharmacyRequest);
 
         pharmacyRepository.save(pharmacy);

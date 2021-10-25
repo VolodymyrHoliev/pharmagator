@@ -8,11 +8,9 @@ import com.eleks.academy.pharmagator.projections.PharmacyDto;
 import com.eleks.academy.pharmagator.repositories.PharmacyRepository;
 import org.dbunit.database.DatabaseDataSourceConnection;
 import org.dbunit.operation.DatabaseOperation;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InOrder;
-import org.mockito.InjectMocks;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +22,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.sql.DataSource;
-
 import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;

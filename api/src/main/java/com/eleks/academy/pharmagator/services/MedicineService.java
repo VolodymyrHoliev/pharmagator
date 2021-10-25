@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,16 +29,22 @@ public class MedicineService {
     @Value("${pharmagator.error-messages.pharmacy-not-found-by-id}")
     private String errorMessage;
 
-    public MedicineDto save(MedicineRequest medicineRequest) {
+
+    public List<MedicineDto> findAll() {
+
+        return medicineRepository.findAll(MedicineDto.class);
+    }
+
+    public MedicineDto save(@NotNull MedicineRequest medicineRequest) {
 
         Medicine medicine = mapper.toEntity(medicineRequest);
 
-        Medicine savedEntity = medicineRepository.save(medicine);
+        medicineRepository.save(medicine);
 
-        return projectionFactory.createProjection(MedicineDto.class, savedEntity);
+        return projectionFactory.createProjection(MedicineDto.class, medicine);
     }
 
-    public MedicineDto update(Long id, MedicineRequest medicineRequest) {
+    public MedicineDto update(@NotNull Long id, @NotNull MedicineRequest medicineRequest) {
 
         Optional<MedicineDto> dtoOptional = medicineRepository.findById(id, MedicineDto.class);
 
@@ -50,24 +57,19 @@ public class MedicineService {
 
             medicine.setId(id);
 
-            Medicine savedMedicine = medicineRepository.save(medicine);
+            medicineRepository.save(medicine);
 
-            return projectionFactory.createProjection(MedicineDto.class, savedMedicine);
+            return projectionFactory.createProjection(MedicineDto.class, medicine);
         }
     }
 
-    public List<MedicineDto> findAll() {
-
-        return medicineRepository.findAll(MedicineDto.class);
-    }
-
-    public MedicineDto findById(Long id) {
+    public MedicineDto findById(@NotNull Long id) {
 
         return medicineRepository.findById(id, MedicineDto.class)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, errorMessage));
     }
 
-    public void delete(Long id) {
+    public void delete(@NotNull Long id) {
 
          medicineRepository.deleteById(id);
     }

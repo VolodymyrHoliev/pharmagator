@@ -10,10 +10,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("/medicines")
 public class MedicineController {
@@ -33,7 +34,7 @@ public class MedicineController {
     }
 
     @PostMapping("/")
-    public MedicineDto create(@RequestBody MedicineRequest medicineRequest) {
+    public MedicineDto create(@Valid @RequestBody MedicineRequest medicineRequest) {
 
         return medicineService.save(medicineRequest);
     }
@@ -48,7 +49,8 @@ public class MedicineController {
     }
 
     @PutMapping("/{medicineId}")
-    public MedicineDto update(@PathVariable Long medicineId, @RequestBody MedicineRequest medicineRequest) {
+    public MedicineDto update(@PathVariable Long medicineId,
+                              @Valid @RequestBody MedicineRequest medicineRequest) {
 
         return medicineService.update(medicineId, medicineRequest);
     }
