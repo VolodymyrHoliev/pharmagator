@@ -28,6 +28,6 @@ public class PharmacyControllerAdvice {
 
         responseBody.put("statusCode",e.getRawStatusCode());
 
-        return ResponseEntity.ok(responseBody);
+        return ResponseEntity.badRequest().body(responseBody);
     }
 }
