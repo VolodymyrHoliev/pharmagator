@@ -1,0 +1,29 @@
+<dataset>
+    <pharmacies id="2021102601" name="Pharmacy_1"/>
+    <pharmacies id="2021102602" name="Pharmacy_2"/>
+
+    <medicines id="2021102601" title="Medicine_1"/>
+    <medicines id="2021102602" title="Medicine_2"/>
+    <medicines id="2021102603" title="Medicine_3"/>
+
+    <prices
+            pharmacy_id="2021102601"
+            medicine_id="2021102601"
+            price="25.0"
+            external_id="extId_102601">
+    </prices>
+
+    <prices
+            pharmacy_id="2021102601"
+            medicine_id="2021102602"
+            price="50.0"
+            external_id="extId_102602">
+    </prices>
+
+    <prices
+            pharmacy_id="2021102602"
+            medicine_id="2021102602"
+            price="47.50"
+            external_id="extId_102602">
+    </prices>
+</dataset>

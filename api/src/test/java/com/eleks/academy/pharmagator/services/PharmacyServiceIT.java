@@ -33,7 +33,7 @@ import static org.mockito.Mockito.*;
 @ActiveProfiles("test")
 @ExtendWith(MockitoExtension.class)
 class PharmacyServiceIT extends AbstractDataIT {
-    private final String DATASET_FILE = "Pharmacy_dataset.xml";
+    private final String DATASET_FILE = "datasets/Pharmacy_dataset.xml";
 
     @SpyBean
     private PharmacyRepository pharmacyRepository;
@@ -84,16 +84,6 @@ class PharmacyServiceIT extends AbstractDataIT {
         assertThrows(IllegalArgumentException.class, () -> subject.save(null));
 
         verify(requestMapper, times(1)).toEntity(null);
-    }
-
-    @Test
-    void save_requestWithNullProperty_IllegalArgumentException() {
-
-        PharmacyRequest pharmacyRequest = new PharmacyRequest(null,
-                "link");
-        assertThrows(IllegalArgumentException.class, () -> subject.save(pharmacyRequest));
-
-        verify(requestMapper, times(1)).toEntity(pharmacyRequest);
     }
 
     @Test

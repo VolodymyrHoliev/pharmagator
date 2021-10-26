@@ -16,10 +16,6 @@ public class PharmacyRequestMapper implements RequestToEntityConverter<PharmacyR
         }
         String title = requestObject.getTitle();
 
-        if(title == null || title.isBlank()){
-            throw new IllegalArgumentException("\"title\" in PharmacyRequest must be not null and not blank");
-        }
-
         String medicineLinkTemplate = requestObject.getMedicineLinkTemplate();
 
         Pharmacy pharmacy = new Pharmacy();

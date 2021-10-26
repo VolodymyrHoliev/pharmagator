@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.validation.ConstraintViolationException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,7 +49,8 @@ public class PharmacyControllerAdvice {
         return ResponseEntity.badRequest().body(responseBody);
     }
 
-    @ExceptionHandler({IllegalArgumentException.class, EmptyResultDataAccessException.class})
+    @ExceptionHandler({IllegalArgumentException.class, EmptyResultDataAccessException.class,
+            ConstraintViolationException.class})
     protected ResponseEntity<Map<String, Object>> handle(Exception e) {
 
         Map<String, Object> responseBody = new HashMap<>();

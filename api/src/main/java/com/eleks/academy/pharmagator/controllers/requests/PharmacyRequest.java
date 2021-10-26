@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Data
 @NoArgsConstructor
@@ -12,8 +13,10 @@ import javax.validation.constraints.NotBlank;
 public class PharmacyRequest {
 
     @NotBlank (message = "'title' param is mandatory")
+    @NotNull
     private String title;
 
+    @NotNull
     @NotBlank (message = "'medicineLinkTemplate' param is mandatory")
     private String medicineLinkTemplate;
 }

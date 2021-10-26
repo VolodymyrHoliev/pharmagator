@@ -6,13 +6,18 @@ import com.eleks.academy.pharmagator.services.PriceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Positive;
 import java.util.List;
 
 @RequiredArgsConstructor
-@Controller
+@RestController
 @RequestMapping("/prices")
+@Validated
 public class PriceController {
 
     private final PriceService priceService;
@@ -24,23 +29,23 @@ public class PriceController {
     }
 
     @GetMapping("/pharmacies/{pharmacyId}/medicines/{medicineId}")
-    public PriceDto getById(@PathVariable Long pharmacyId,
-                            @PathVariable Long medicineId) {
+    public PriceDto getById(@PathVariable @Min(value = 1) Long pharmacyId,
+                            @PathVariable @Min(1) Long medicineId) {
 
         return priceService.findById(medicineId, pharmacyId);
     }
 
     @PostMapping("/pharmacies/{pharmacyId}/medicines/{medicineId}")
-    public PriceDto create(@PathVariable Long medicineId,
-                           @PathVariable Long pharmacyId,
-                           @RequestBody PriceRequest priceRequest) {
+    public PriceDto create(@PathVariable @Min(1) Long medicineId,
+                           @PathVariable @Min(1) Long pharmacyId,
+                           @Valid @RequestBody PriceRequest priceRequest) {
 
         return priceService.save(priceRequest, medicineId, pharmacyId);
     }
 
     @DeleteMapping("/pharmacies/{pharmacyId}/medicines/{medicineId}")
-    public ResponseEntity<Void> deleteById(@PathVariable Long pharmacyId,
-                                           @PathVariable Long medicineId) {
+    public ResponseEntity<Void> deleteById(@PathVariable @Min(1) Long pharmacyId,
+                                           @PathVariable @Min(1) Long medicineId) {
 
         priceService.delete(medicineId, pharmacyId);
 
@@ -48,9 +53,9 @@ public class PriceController {
     }
 
     @PutMapping("/pharmacies/{pharmacyId}/medicines/{medicineId}")
-    public PriceDto update(@PathVariable Long pharmacyId,
-                           @PathVariable Long medicineId,
-                           @RequestBody PriceRequest priceRequest) {
+    public PriceDto update(@PathVariable @Min(1) Long pharmacyId,
+                           @PathVariable @Min(1) Long medicineId,
+                           @Valid @RequestBody PriceRequest priceRequest) {
 
         return priceService.update(medicineId, pharmacyId, priceRequest);
     }

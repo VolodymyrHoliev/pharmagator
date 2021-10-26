@@ -34,7 +34,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class MedicineServiceIT extends AbstractDataIT {
 
-    private final String DATASET_FILE = "Medicine_dataset.xml";
+    private final String DATASET_FILE = "datasets/Medicine_dataset.xml";
     private DatabaseDataSourceConnection connection;
 
     @SpyBean

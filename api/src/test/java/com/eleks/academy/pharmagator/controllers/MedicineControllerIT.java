@@ -33,7 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 class MedicineControllerIT extends AbstractDataIT {
 
-    private final String DATASET_FILE = "Medicine_dataset.xml";
+    private final String DATASET_FILE = "datasets/Medicine_dataset.xml";
     private MockMvc mockMvc;
     private DatabaseDataSourceConnection dataSourceConnection;
 
@@ -45,7 +45,7 @@ class MedicineControllerIT extends AbstractDataIT {
     }
 
     @Test
-    public void findAllMedicines_findIds_ok() throws Exception {
+    public void findAllMedicines_ok() throws Exception {
         try {
             DatabaseOperation.REFRESH.execute(this.dataSourceConnection, readDataset(DATASET_FILE));
 

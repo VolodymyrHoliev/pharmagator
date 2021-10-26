@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Positive;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,7 +29,7 @@ public class MedicineController {
     }
 
     @GetMapping("/{medicineId}")
-    public MedicineDto getById(@PathVariable Long medicineId) {
+    public MedicineDto getById(@PathVariable @Positive Long medicineId) {
 
         return medicineService.findById(medicineId);
     }
@@ -38,20 +39,20 @@ public class MedicineController {
 
         return medicineService.save(medicineRequest);
     }
+    @PutMapping("/{medicineId}")
+    public MedicineDto update(@PathVariable @Positive Long medicineId,
+                              @Valid @RequestBody MedicineRequest medicineRequest) {
 
+        return medicineService.update(medicineId, medicineRequest);
+    }
 
     @DeleteMapping("/{medicineId}")
-    public ResponseEntity<Void> deleteById(@PathVariable Long medicineId) {
+    public ResponseEntity<Void> deleteById(@PathVariable @Positive Long medicineId) {
 
         medicineService.delete(medicineId);
 
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/{medicineId}")
-    public MedicineDto update(@PathVariable Long medicineId,
-                              @Valid @RequestBody MedicineRequest medicineRequest) {
 
-        return medicineService.update(medicineId, medicineRequest);
-    }
 }

@@ -12,11 +12,6 @@ public class MedicineRequestMapper implements RequestToEntityConverter<MedicineR
         if (requestObject == null) {
             throw new IllegalArgumentException("PharmacyRequest can`t be null");
         }
-        String title = requestObject.getTitle();
-
-        if (title == null || title.isBlank()) {
-            throw new IllegalArgumentException("\"title\" in PharmacyRequest must be not null and not blank");
-        }
 
         Medicine medicine = new Medicine();
 
