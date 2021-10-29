@@ -4,17 +4,18 @@ import com.eleks.academy.pharmagator.controllers.requests.MedicineRequest;
 import com.eleks.academy.pharmagator.projections.MedicineDto;
 import com.eleks.academy.pharmagator.services.MedicineService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import java.util.List;
 
-@Slf4j
-@Controller
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("/medicines")
+@Validated
 public class MedicineController {
 
     private final MedicineService medicineService;
@@ -26,30 +27,31 @@ public class MedicineController {
     }
 
     @GetMapping("/{medicineId}")
-    public MedicineDto getById(@PathVariable Long medicineId) {
+    public MedicineDto getById(@PathVariable @Min(1) Long medicineId) {
 
         return medicineService.findById(medicineId);
     }
 
     @PostMapping("/")
-    public MedicineDto create(@RequestBody MedicineRequest medicineRequest) {
+    public MedicineDto create(@Valid @RequestBody MedicineRequest medicineRequest) {
 
         return medicineService.save(medicineRequest);
     }
 
+    @PutMapping("/{medicineId}")
+    public MedicineDto update(@PathVariable @Min(1) Long medicineId,
+                              @Valid @RequestBody MedicineRequest medicineRequest) {
+
+        return medicineService.update(medicineId, medicineRequest);
+    }
 
     @DeleteMapping("/{medicineId}")
-    public ResponseEntity<Void> deleteById(@PathVariable Long medicineId) {
+    public ResponseEntity<Void> deleteById(@PathVariable @Min(1) Long medicineId) {
 
         medicineService.delete(medicineId);
 
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/{medicineId}")
-    public MedicineDto update(@PathVariable Long medicineId, @RequestBody MedicineRequest medicineRequest) {
-
-        return medicineService.update(medicineId, medicineRequest);
-    }
 
 }
