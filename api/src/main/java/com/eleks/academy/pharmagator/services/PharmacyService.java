@@ -3,21 +3,23 @@ package com.eleks.academy.pharmagator.services;
 import com.eleks.academy.pharmagator.controllers.requests.PharmacyRequest;
 import com.eleks.academy.pharmagator.converters.request.RequestToEntityConverter;
 import com.eleks.academy.pharmagator.entities.Pharmacy;
+import com.eleks.academy.pharmagator.exceptions.ObjectNotFoundException;
 import com.eleks.academy.pharmagator.projections.PharmacyDto;
 import com.eleks.academy.pharmagator.repositories.PharmacyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.projection.ProjectionFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
+import org.springframework.validation.annotation.Validated;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
+@Validated
 public class PharmacyService {
 
     private final PharmacyRepository pharmacyRepository;
@@ -38,13 +40,13 @@ public class PharmacyService {
         return projectionFactory.createProjection(PharmacyDto.class, pharmacy);
     }
 
-    public PharmacyDto update(@NotNull Long id, @NotNull PharmacyRequest pharmacyRequest) {
+    public PharmacyDto update(@NotNull Long id, @Valid @NotNull PharmacyRequest pharmacyRequest) {
 
         Optional<Pharmacy> dtoOptional = pharmacyRepository.findById(id, Pharmacy.class);
 
         if (dtoOptional.isEmpty()) {
 
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, errorMessage);
+            throw new ObjectNotFoundException(errorMessage);
 
         } else {
 
@@ -66,10 +68,12 @@ public class PharmacyService {
     public PharmacyDto findById(@NotNull Long id) {
 
         return pharmacyRepository.findById(id, PharmacyDto.class)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, errorMessage));
+                .orElseThrow(() -> new ObjectNotFoundException(errorMessage));
     }
 
     public void delete(@NotNull Long pharmacyId) {
+
+        this.findById(pharmacyId);
 
         pharmacyRepository.deleteById(pharmacyId);
     }

@@ -5,15 +5,17 @@ import com.eleks.academy.pharmagator.projections.PharmacyDto;
 import com.eleks.academy.pharmagator.services.PharmacyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Positive;
+import javax.validation.constraints.Min;
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/pharmacies")
+@Validated
 public class PharmacyController {
 
     private final PharmacyService pharmacyService;
@@ -25,7 +27,7 @@ public class PharmacyController {
     }
 
     @GetMapping("/{pharmacyId}")
-    public PharmacyDto getById(@PathVariable @Positive Long pharmacyId) {
+    public PharmacyDto getById(@PathVariable @Min(1) Long pharmacyId) {
 
         return pharmacyService.findById(pharmacyId);
     }
@@ -38,7 +40,7 @@ public class PharmacyController {
 
 
     @DeleteMapping("/{pharmacyId}")
-    public ResponseEntity<Void> deleteById(@PathVariable @Positive Long pharmacyId) {
+    public ResponseEntity<Void> deleteById(@PathVariable @Min(1) Long pharmacyId) {
 
         pharmacyService.delete(pharmacyId);
 
@@ -47,7 +49,7 @@ public class PharmacyController {
 
 
     @PutMapping("/{pharmacyId}")
-    public PharmacyDto update(@PathVariable @Positive Long pharmacyId,
+    public PharmacyDto update(@PathVariable @Min(1) Long pharmacyId,
                               @Valid @RequestBody PharmacyRequest requestBody) {
 
         return pharmacyService.update(pharmacyId, requestBody);

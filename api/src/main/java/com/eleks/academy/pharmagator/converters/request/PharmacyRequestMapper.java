@@ -2,17 +2,20 @@ package com.eleks.academy.pharmagator.converters.request;
 
 import com.eleks.academy.pharmagator.controllers.requests.PharmacyRequest;
 import com.eleks.academy.pharmagator.entities.Pharmacy;
+import com.eleks.academy.pharmagator.exceptions.NotNullConstraintViolationException;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.annotation.Validated;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 @Component
 public class PharmacyRequestMapper implements RequestToEntityConverter<PharmacyRequest, Pharmacy> {
 
     @Override
-    public Pharmacy toEntity(@NotNull PharmacyRequest requestObject) {
+    public Pharmacy toEntity(@Valid PharmacyRequest requestObject) {
         if(requestObject == null){
-            throw new IllegalArgumentException("PharmacyRequest can`t be null");
+            throw new NotNullConstraintViolationException("PharmacyRequest can`t be null");
         }
         String title = requestObject.getTitle();
 

@@ -1,5 +1,8 @@
 package com.eleks.academy.pharmagator.controllers.advices;
 
+import com.eleks.academy.pharmagator.exceptions.ObjectNotFoundException;
+import com.eleks.academy.pharmagator.validation.ValidationErrorResponse;
+import com.eleks.academy.pharmagator.validation.Violation;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,52 +14,66 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @ControllerAdvice
 public class PharmacyControllerAdvice {
 
-    @ExceptionHandler(value = {ResponseStatusException.class})
-    protected ResponseEntity<Map<String, Object>> handle(ResponseStatusException e) {
+    @ExceptionHandler(value = {ObjectNotFoundException.class})
+    protected ResponseEntity<Map<String, Object>> handle(ObjectNotFoundException e) {
 
         Map<String, Object> responseBody = new HashMap<>();
 
-        String message = e.getReason();
+        responseBody.put("errorMessage", e.getMessage());
 
-        HttpStatus status = e.getStatus();
+        responseBody.put("status", "Not found");
 
-        responseBody.put("errorMessage", message);
-
-        responseBody.put("status", status);
-
-        responseBody.put("statusCode", e.getRawStatusCode());
+        responseBody.put("statusCode", 404);
 
         return ResponseEntity.badRequest().body(responseBody);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    protected ResponseEntity<Map<String, Object>> handle(MethodArgumentNotValidException e) {
+    protected ResponseEntity<ValidationErrorResponse> handle(MethodArgumentNotValidException e) {
 
-        //TODO make error response in this method more informative
+        ValidationErrorResponse errorResponse = new ValidationErrorResponse();
 
-        Map<String, Object> responseBody = new HashMap<>();
+        List<FieldError> fieldErrors = e.getBindingResult().getFieldErrors();
 
-        responseBody.put("errors", e.getMessage());
+        for (FieldError error : fieldErrors) {
 
-        return ResponseEntity.badRequest().body(responseBody);
+            Violation violation = Violation.builder()
+                    .fieldName(error.getField())
+                    .errorMessage(error.getDefaultMessage())
+                    .build();
+
+            errorResponse.addViolation(violation);
+        }
+        return ResponseEntity.badRequest().body(errorResponse);
     }
 
-    @ExceptionHandler({IllegalArgumentException.class, EmptyResultDataAccessException.class,
-            ConstraintViolationException.class})
-    protected ResponseEntity<Map<String, Object>> handle(Exception e) {
+    @ExceptionHandler({ConstraintViolationException.class})
+    protected ResponseEntity<ValidationErrorResponse> handle(ConstraintViolationException e) {
 
-        Map<String, Object> responseBody = new HashMap<>();
+        ValidationErrorResponse errorResponse = new ValidationErrorResponse();
 
-        responseBody.put("errorMessage", e.getLocalizedMessage());
+        Set<ConstraintViolation<?>> constraintViolations = e.getConstraintViolations();
 
-        return ResponseEntity.badRequest().body(responseBody);
+        for (ConstraintViolation<?> constraintViolation : constraintViolations) {
+
+            Violation violation = Violation.builder()
+                    .fieldName(constraintViolation.getPropertyPath().toString())
+                    .errorMessage(constraintViolation.getMessage())
+                    .build();
+
+            errorResponse.addViolation(violation);
+        }
+
+        return ResponseEntity.badRequest().body(errorResponse);
     }
 }

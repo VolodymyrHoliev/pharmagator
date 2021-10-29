@@ -24,12 +24,4 @@ class PharmagatorApplicationTests {
 
     }
 
-    @Test
-    public void test(){
-
-        List<Pharmacy> all = pharmacyRepository.findAll();
-
-        assertEquals(1,all.size());
-    }
-
 }
