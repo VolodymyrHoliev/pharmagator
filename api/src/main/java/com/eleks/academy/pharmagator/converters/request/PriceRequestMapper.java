@@ -2,6 +2,7 @@ package com.eleks.academy.pharmagator.converters.request;
 
 import com.eleks.academy.pharmagator.controllers.requests.PriceRequest;
 import com.eleks.academy.pharmagator.entities.Price;
+import com.eleks.academy.pharmagator.exceptions.NotNullConstraintViolationException;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
@@ -13,7 +14,7 @@ public class PriceRequestMapper implements RequestToEntityConverter<PriceRequest
     public Price toEntity(PriceRequest requestObject) {
 
         if(requestObject == null){
-            throw new IllegalArgumentException("PriceRequest can`t be null");
+            throw new NotNullConstraintViolationException("PriceRequest can`t be null");
         }
 
         Price price = new Price();

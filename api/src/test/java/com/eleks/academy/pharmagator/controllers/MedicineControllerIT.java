@@ -3,6 +3,7 @@ package com.eleks.academy.pharmagator.controllers;
 import com.eleks.academy.pharmagator.AbstractDataIT;
 import com.eleks.academy.pharmagator.JsonWriter;
 import com.eleks.academy.pharmagator.controllers.requests.MedicineRequest;
+import com.eleks.academy.pharmagator.exceptions.ObjectNotFoundException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.dbunit.database.DatabaseDataSourceConnection;
 import org.dbunit.operation.DatabaseOperation;
@@ -11,7 +12,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.test.context.ActiveProfiles;
@@ -19,7 +19,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;
@@ -76,17 +75,15 @@ class MedicineControllerIT extends AbstractDataIT {
     }
 
     @Test
-    public void findById_nonExistingId_ResponseStatusException() throws Exception {
+    public void findById_nonExistingId_ObjectNotFoundException() throws Exception {
         try {
             DatabaseOperation.REFRESH.execute(this.dataSourceConnection, readDataset(DATASET_FILE));
 
             this.mockMvc.perform(MockMvcRequestBuilders
                             .get("/medicines/{medicineId}", Long.MAX_VALUE))
                     .andExpect(MockMvcResultMatchers.status().isBadRequest())
-                    .andExpect(jsonPath("$.statusCode", is(404)))
-                    .andExpect(jsonPath("$.status", is("NOT_FOUND")))
                     .andExpect(result ->
-                            assertTrue(result.getResolvedException() instanceof ResponseStatusException));
+                            assertTrue(result.getResolvedException() instanceof ObjectNotFoundException));
 
         } finally {
             dataSourceConnection.close();
@@ -121,19 +118,6 @@ class MedicineControllerIT extends AbstractDataIT {
     }
 
     @Test
-    public void create_requestIsNull_HttpMessageNotReadableException() throws Exception {
-
-        String json = JsonWriter.write(null);
-        mockMvc.perform(MockMvcRequestBuilders.post("/medicines/")
-                        .accept(MediaType.APPLICATION_JSON)
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(json))
-                .andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(result ->
-                        assertTrue(result.getResolvedException() instanceof HttpMessageNotReadableException));
-    }
-
-    @Test
     public void deleteById_ok() throws Exception {
         final long id = 2021102502;
         try {
@@ -149,7 +133,7 @@ class MedicineControllerIT extends AbstractDataIT {
     }
 
     @Test
-    public void deleteById_nonExistingId_exc() throws Exception {
+    public void deleteById_nonExistingId_ObjectNotFoundException() throws Exception {
         try {
             DatabaseOperation.REFRESH.execute(this.dataSourceConnection, readDataset(DATASET_FILE));
 
@@ -157,7 +141,7 @@ class MedicineControllerIT extends AbstractDataIT {
                             .delete("/medicines/{medicineId}", Long.MAX_VALUE))
                     .andExpect(MockMvcResultMatchers.status().isBadRequest())
                     .andExpect(result ->
-                            assertTrue(result.getResolvedException() instanceof EmptyResultDataAccessException));
+                            assertTrue(result.getResolvedException() instanceof ObjectNotFoundException));
 
         } finally {
             dataSourceConnection.close();
@@ -184,7 +168,7 @@ class MedicineControllerIT extends AbstractDataIT {
     }
 
     @Test
-    public void update_nonExistingId_ResponseStatusException() throws Exception {
+    public void update_nonExistingId_ObjectNotFoundException() throws Exception {
         MedicineRequest request = new MedicineRequest("Updated");
         try {
             DatabaseOperation.REFRESH.execute(this.dataSourceConnection, readDataset(DATASET_FILE));
@@ -194,10 +178,8 @@ class MedicineControllerIT extends AbstractDataIT {
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
                             .content(JsonWriter.write(request)))
                     .andExpect(MockMvcResultMatchers.status().isBadRequest())
-                    .andExpect(jsonPath("$.status", is("NOT_FOUND")))
-                    .andExpect(jsonPath("$.statusCode", is(404)))
                     .andExpect(result ->
-                            assertTrue(result.getResolvedException() instanceof ResponseStatusException));
+                            assertTrue(result.getResolvedException() instanceof ObjectNotFoundException));
 
         } finally {
             dataSourceConnection.close();
@@ -206,7 +188,7 @@ class MedicineControllerIT extends AbstractDataIT {
 
     @Test
     public void update_invalidRequestBodyProperties_MethodArgumentNotValidException() throws Exception {
-        final long id = 2021102102;
+        final long id = 2021102502;
         MedicineRequest request = new MedicineRequest("");
         try {
             DatabaseOperation.REFRESH.execute(this.dataSourceConnection, readDataset(DATASET_FILE));

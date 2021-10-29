@@ -4,6 +4,8 @@ import com.eleks.academy.pharmagator.AbstractDataIT;
 import com.eleks.academy.pharmagator.controllers.requests.PriceRequest;
 import com.eleks.academy.pharmagator.converters.request.PriceRequestMapper;
 import com.eleks.academy.pharmagator.entities.Price;
+import com.eleks.academy.pharmagator.exceptions.NotNullConstraintViolationException;
+import com.eleks.academy.pharmagator.exceptions.ObjectNotFoundException;
 import com.eleks.academy.pharmagator.projections.PriceDto;
 import com.eleks.academy.pharmagator.repositories.MedicineRepository;
 import com.eleks.academy.pharmagator.repositories.PharmacyRepository;
@@ -21,7 +23,6 @@ import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.data.projection.SpelAwareProxyProjectionFactory;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.sql.DataSource;
 import java.math.BigDecimal;
@@ -109,7 +110,7 @@ class PriceServiceIT extends AbstractDataIT {
     }
 
     @Test
-    public void findById_validPharmacyAndMedicineId_ok() throws Exception {
+    public void findById_ok() throws Exception {
 
         final long pharmacyId = 2021102601;
         final long medicineId = 2021102602;
@@ -131,14 +132,14 @@ class PriceServiceIT extends AbstractDataIT {
     }
 
     @Test
-    public void findById_nonExistingPharmacyId_ResponseStatusException() throws Exception {
+    public void findById_nonExistingPharmacyId_ObjectNotFoundException() throws Exception {
 
         final long medicineId = 2021102602;
 
         try {
             DatabaseOperation.REFRESH.execute(connection, readDataset(DATASET_FILE));
 
-            assertThrows(ResponseStatusException.class, () -> subject.findById(medicineId, Long.MAX_VALUE));
+            assertThrows(ObjectNotFoundException.class, () -> subject.findById(medicineId, Long.MAX_VALUE));
 
         } finally {
             connection.close();
@@ -146,14 +147,14 @@ class PriceServiceIT extends AbstractDataIT {
     }
 
     @Test
-    public void findById_nonExistingMedicineId_ResponseStatusException() throws Exception {
+    public void findById_nonExistingMedicineId_ObjectNotFoundException() throws Exception {
 
         final long pharmacyId = 2021102601;
 
         try {
             DatabaseOperation.REFRESH.execute(connection, readDataset(DATASET_FILE));
 
-            assertThrows(ResponseStatusException.class, () -> subject.findById(Long.MAX_VALUE, pharmacyId));
+            assertThrows(ObjectNotFoundException.class, () -> subject.findById(Long.MAX_VALUE, pharmacyId));
 
         } finally {
             connection.close();
@@ -174,14 +175,14 @@ class PriceServiceIT extends AbstractDataIT {
 
             PriceDto priceDto = subject.save(request, medicineId, pharmacyId);
 
-            InOrder order = inOrder(requestMapper, medicineRepository, pharmacyRepository,
+            InOrder order = inOrder(medicineRepository, pharmacyRepository, requestMapper,
                     priceRepository, projectionFactory);
-
-            order.verify(requestMapper).toEntity(request);
 
             order.verify(medicineRepository).findById(medicineId);
 
             order.verify(pharmacyRepository).findById(pharmacyId);
+
+            order.verify(requestMapper).toEntity(request);
 
             order.verify(priceRepository).save(any(Price.class));
 
@@ -196,19 +197,19 @@ class PriceServiceIT extends AbstractDataIT {
     @Test
     public void save_nullRequest_IllegalArgumentException() {
 
-        assertThrows(IllegalArgumentException.class,
+        assertThrows(NotNullConstraintViolationException.class,
                 () -> subject.save(null, 2021102601L, 2021102601L));
     }
 
     @Test
-    public void save_validRequestAndNonExistingMedicineId_ResponseStatusException() throws Exception {
+    public void save_validRequestAndNonExistingMedicineId_ObjectNotFoundException() throws Exception {
 
         final long pharmacyId = 2021102601;
         PriceRequest request = new PriceRequest(BigDecimal.valueOf(10.5), "extId");
         try {
             DatabaseOperation.REFRESH.execute(connection, readDataset(DATASET_FILE));
 
-            assertThrows(IllegalArgumentException.class,
+            assertThrows(ObjectNotFoundException.class,
                     () -> subject.save(request, Long.MAX_VALUE, pharmacyId));
 
         } finally {
@@ -217,7 +218,7 @@ class PriceServiceIT extends AbstractDataIT {
     }
 
     @Test
-    public void save_validRequestAndNonExistingPharmacyId_ResponseStatusException() throws Exception {
+    public void save_validRequestAndNonExistingPharmacyId_ObjectNotFoundException() throws Exception {
 
         final long medicineId = 2021102601;
 
@@ -225,7 +226,7 @@ class PriceServiceIT extends AbstractDataIT {
         try {
             DatabaseOperation.REFRESH.execute(connection, readDataset(DATASET_FILE));
 
-            assertThrows(IllegalArgumentException.class,
+            assertThrows(ObjectNotFoundException.class,
                     () -> subject.save(request, medicineId, Long.MAX_VALUE));
 
         } finally {
@@ -234,7 +235,7 @@ class PriceServiceIT extends AbstractDataIT {
     }
 
     @Test
-    public void update_validRequest_ok() throws Exception {
+    public void update_ok() throws Exception {
         PriceRequest priceRequest = new PriceRequest(BigDecimal.TEN, "extId");
         final long pharmacyId = 2021102601;
         final long medicineId = 2021102602;
@@ -266,14 +267,14 @@ class PriceServiceIT extends AbstractDataIT {
     }
 
     @Test
-    public void update_nullRequest_IllegalArgumentException() throws Exception {
+    public void update_nullRequest_NotNullConstraintViolationException() throws Exception {
         final long pharmacyId = 2021102601;
         final long medicineId = 2021102602;
 
         try {
             DatabaseOperation.REFRESH.execute(connection, readDataset(DATASET_FILE));
 
-            assertThrows(IllegalArgumentException.class,
+            assertThrows(NotNullConstraintViolationException.class,
                     () -> subject.update(medicineId, pharmacyId, null));
         } finally {
             connection.close();
@@ -281,14 +282,14 @@ class PriceServiceIT extends AbstractDataIT {
     }
 
     @Test
-    public void update_nonExistingEntity_ResponseStatusException() throws Exception {
+    public void update_nonExistingEntity_ObjectNotFoundException() throws Exception {
         PriceRequest priceRequest = new PriceRequest(BigDecimal.TEN, "extId");
         final long medicineId = 2021102602;
 
         try {
             DatabaseOperation.REFRESH.execute(connection, readDataset(DATASET_FILE));
 
-            assertThrows(ResponseStatusException.class,
+            assertThrows(ObjectNotFoundException.class,
                     () -> subject.update(medicineId, Long.MAX_VALUE, priceRequest));
         } finally {
             connection.close();
@@ -296,7 +297,7 @@ class PriceServiceIT extends AbstractDataIT {
     }
 
     @Test
-    public void deleteById_validRequest_ok() throws Exception {
+    public void deleteById_ok() throws Exception {
         final long pharmacyId = 2021102601;
         final long medicineId = 2021102602;
 
@@ -315,13 +316,13 @@ class PriceServiceIT extends AbstractDataIT {
     }
 
     @Test
-    public void deleteById_nonExistingEntity_ok() throws Exception {
+    public void deleteById_nonExistingEntity_ObjectNotFoundException() throws Exception {
         final long pharmacyId = 2021102601;
 
         try {
             DatabaseOperation.REFRESH.execute(connection, readDataset(DATASET_FILE));
 
-            assertThrows(IllegalArgumentException.class,
+            assertThrows(ObjectNotFoundException.class,
                     () -> subject.delete(Long.MAX_VALUE, pharmacyId));
 
             verify(priceRepository, never()).deleteByMedicineIdAndPharmacyId(Long.MAX_VALUE, pharmacyId);

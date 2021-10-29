@@ -140,19 +140,6 @@ public class PharmacyControllerIT {
     }
 
     @Test
-    public void create_requestIsNull_HttpMessageNotReadableException() throws Exception {
-
-        String json = JsonWriter.write(null);
-        mockMvc.perform(MockMvcRequestBuilders.post("/pharmacies/")
-                        .accept(MediaType.APPLICATION_JSON)
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(json))
-                .andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(result ->
-                        assertTrue(result.getResolvedException() instanceof HttpMessageNotReadableException));
-    }
-
-    @Test
     public void deleteById_ok() throws Exception {
         final long id = 2021102102;
         try {

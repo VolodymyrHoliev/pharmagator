@@ -4,6 +4,8 @@ import com.eleks.academy.pharmagator.AbstractDataIT;
 import com.eleks.academy.pharmagator.controllers.requests.MedicineRequest;
 import com.eleks.academy.pharmagator.converters.request.MedicineRequestMapper;
 import com.eleks.academy.pharmagator.entities.Medicine;
+import com.eleks.academy.pharmagator.exceptions.NotNullConstraintViolationException;
+import com.eleks.academy.pharmagator.exceptions.ObjectNotFoundException;
 import com.eleks.academy.pharmagator.projections.MedicineDto;
 import com.eleks.academy.pharmagator.repositories.MedicineRepository;
 import org.dbunit.database.DatabaseDataSourceConnection;
@@ -97,21 +99,13 @@ class MedicineServiceIT extends AbstractDataIT {
     }
 
     @Test
-    void save_nullRequest_IllegalArgumentException() {
+    void save_nullRequest_NotNullConstraintViolationException() {
 
-        assertThrows(IllegalArgumentException.class, () -> subject.save(null));
+        assertThrows(NotNullConstraintViolationException.class, () -> subject.save(null));
 
         verify(mapper, times(1)).toEntity(null);
     }
 
-    @Test
-    void save_requestWithNullProperty_IllegalArgumentException() {
-
-        MedicineRequest medicineRequest = new MedicineRequest(null);
-        assertThrows(IllegalArgumentException.class, () -> subject.save(medicineRequest));
-
-        verify(mapper, times(1)).toEntity(medicineRequest);
-    }
 
     @Test
     void update_validRequest_ok() throws Exception {
@@ -143,26 +137,25 @@ class MedicineServiceIT extends AbstractDataIT {
     }
 
     @Test
-    void update_nonExistingId_ResponseStatusException() {
-        assertThrows(ResponseStatusException.class, () ->
+    void update_nonExistingId_ObjectNotFoundException() {
+        assertThrows(ObjectNotFoundException.class, () ->
                 subject
                         .update(Long.MAX_VALUE, new MedicineRequest("  ")));
     }
 
     @Test
-    void update_null_IllegalArgumentException() {
-        final long id = 2021102501;
-        assertThrows(IllegalArgumentException.class, () ->
-                subject
-                        .update(id, null));
-    }
+    void update_null_NotNullConstraintViolationException() throws Exception {
+        try {
+            DatabaseOperation.REFRESH.execute(connection, readDataset(DATASET_FILE));
 
-    @Test
-    void update_requestWithNullProperty_IllegalArgumentException() {
-        final long id = 2021102501;
-        assertThrows(IllegalArgumentException.class, () ->
-                subject
-                        .update(id, new MedicineRequest(null)));
+            final long id = 2021102501;
+            assertThrows(NotNullConstraintViolationException.class, () ->
+                    subject
+                            .update(id, null));
+        } finally {
+
+            connection.close();
+        }
     }
 
     @Test
@@ -182,9 +175,9 @@ class MedicineServiceIT extends AbstractDataIT {
     }
 
     @Test
-    void findById_nonExistingId_ResponseStatusException() {
+    void findById_nonExistingId_ObjectNotFoundException() {
 
-        assertThrows(ResponseStatusException.class, () -> subject.findById(Long.MAX_VALUE));
+        assertThrows(ObjectNotFoundException.class, () -> subject.findById(Long.MAX_VALUE));
     }
 
     @Test

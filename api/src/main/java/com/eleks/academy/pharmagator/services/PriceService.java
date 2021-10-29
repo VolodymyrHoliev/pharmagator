@@ -3,6 +3,9 @@ package com.eleks.academy.pharmagator.services;
 import com.eleks.academy.pharmagator.controllers.requests.PriceRequest;
 import com.eleks.academy.pharmagator.converters.request.RequestToEntityConverter;
 import com.eleks.academy.pharmagator.entities.Price;
+import com.eleks.academy.pharmagator.exceptions.NotNullConstraintViolationException;
+import com.eleks.academy.pharmagator.exceptions.ObjectNotFoundException;
+import com.eleks.academy.pharmagator.exceptions.UniqueConstraintViolation;
 import com.eleks.academy.pharmagator.projections.PriceDto;
 import com.eleks.academy.pharmagator.repositories.MedicineRepository;
 import com.eleks.academy.pharmagator.repositories.PharmacyRepository;
@@ -43,23 +46,18 @@ public class PriceService {
     public PriceDto findById(Long medicineId, Long pharmacyId) {
 
         return priceRepository.findByMedicineIdAndPharmacyId(medicineId, pharmacyId, PriceDto.class)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, errorMessage));
+                .orElseThrow(() -> new ObjectNotFoundException(errorMessage));
     }
 
     public PriceDto save(PriceRequest priceRequest, Long medicineId, Long pharmacyId) {
 
-        if (priceRequest == null) {
-
-            throw new IllegalArgumentException("PriceRequest can`t be null");
-        }
-
         medicineRepository.findById(medicineId)
                 .orElseThrow(() ->
-                        new IllegalArgumentException("Can`t save price due to: " +
+                        new ObjectNotFoundException("Can`t save price due to: " +
                                 "Medicine with specified id not found"));
         pharmacyRepository.findById(pharmacyId)
                 .orElseThrow(() ->
-                        new IllegalArgumentException("Can`t save price due to: " +
+                        new ObjectNotFoundException("Can`t save price due to: " +
                                 "Pharmacy with specified id not found"));
 
         Price price = mapper.toEntity(priceRequest);
@@ -73,7 +71,7 @@ public class PriceService {
 
         if(priceDtoOptional.isPresent()){
 
-            throw new IllegalArgumentException("Price with specified pharmacyId and medicineId " +
+            throw new UniqueConstraintViolation("Price with specified pharmacyId and medicineId " +
                     "already exists.Consider use put request if you need to update existing price");
 
         }else {
@@ -92,10 +90,10 @@ public class PriceService {
 
         if (entityOptional.isEmpty()) {
 
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, errorMessage);
+            throw new ObjectNotFoundException(errorMessage);
         } else if (priceRequest == null) {
 
-            throw new IllegalArgumentException("PriceRequest can`t be null");
+            throw new NotNullConstraintViolationException("PriceRequest can`t be null");
         } else {
 
             Price price = entityOptional.get();
@@ -113,7 +111,7 @@ public class PriceService {
     public void delete(Long medicineId, Long pharmacyId) {
         priceRepository.findByMedicineIdAndPharmacyId(medicineId, pharmacyId, Price.class)
                         .orElseThrow(() ->
-                                new IllegalArgumentException("Attempt to delete not existing entity.Check " +
+                                new ObjectNotFoundException("Attempt to delete not existing entity.Check " +
                                         "'medicineId' and 'pharmacyId' values"));
         priceRepository
                 .deleteByMedicineIdAndPharmacyId(medicineId, pharmacyId);

@@ -3,6 +3,8 @@ package com.eleks.academy.pharmagator.controllers;
 import com.eleks.academy.pharmagator.AbstractDataIT;
 import com.eleks.academy.pharmagator.JsonWriter;
 import com.eleks.academy.pharmagator.controllers.requests.PriceRequest;
+import com.eleks.academy.pharmagator.exceptions.ObjectNotFoundException;
+import com.eleks.academy.pharmagator.exceptions.UniqueConstraintViolation;
 import org.dbunit.database.DatabaseDataSourceConnection;
 import org.dbunit.operation.DatabaseOperation;
 import org.junit.jupiter.api.Test;
@@ -15,15 +17,15 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.sql.DataSource;
 import javax.validation.ConstraintViolationException;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.hamcrest.Matchers.hasItems;
+import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @SpringBootTest
@@ -75,7 +77,7 @@ class PriceControllerIT extends AbstractDataIT {
     }
 
     @Test
-    public void findById_nonExistingEntity_ResponseStatusException() throws Exception {
+    public void findById_nonExistingEntity_ObjectNotFoundException() throws Exception {
 
         final String url = "/prices/pharmacies/{pharmacyId}/medicines/{medicineId}";
         final long medicineId = 2021102602;
@@ -87,10 +89,8 @@ class PriceControllerIT extends AbstractDataIT {
                             .get(url,
                                     Long.MAX_VALUE, medicineId))
                     .andExpect(MockMvcResultMatchers.status().isBadRequest())
-                    .andExpect(jsonPath("$.statusCode", is(404)))
-                    .andExpect(jsonPath("$.status", is("NOT_FOUND")))
                     .andExpect(result ->
-                            assertTrue(result.getResolvedException() instanceof ResponseStatusException));
+                            assertTrue(result.getResolvedException() instanceof ObjectNotFoundException));
 
         } finally {
             connection.close();
@@ -98,7 +98,7 @@ class PriceControllerIT extends AbstractDataIT {
     }
 
     @Test
-    public void findById_invalidIdValue_MethodArgumentNotValidException() throws Exception {
+    public void findById_invalidPharmacyIdValue_ConstraintViolationException() throws Exception {
 
         final String url = "/prices/pharmacies/{pharmacyId}/medicines/{medicineId}";
         final long medicineId = 2021102602;
@@ -118,7 +118,46 @@ class PriceControllerIT extends AbstractDataIT {
     }
 
     @Test
-    public void create_validRequest_ok() throws Exception{
+    public void findById_invalidMedicineIdValue_ConstraintViolationException() throws Exception {
+
+        final String url = "/prices/pharmacies/{pharmacyId}/medicines/{medicineId}";
+        final long pharmacyId = 2021102601;
+
+        try {
+            DatabaseOperation.REFRESH.execute(this.connection, readDataset(DATASET_FILE));
+
+            this.mockMvc.perform(MockMvcRequestBuilders
+                            .get(url, pharmacyId, -1))
+                    .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                    .andExpect(result ->
+                            assertTrue(result.getResolvedException() instanceof ConstraintViolationException));
+
+        } finally {
+            connection.close();
+        }
+    }
+
+    @Test
+    public void findById_invalidMedicineAndPharmacyIdValue_ConstraintViolationException() throws Exception {
+
+        final String url = "/prices/pharmacies/{pharmacyId}/medicines/{medicineId}";
+
+        try {
+            DatabaseOperation.REFRESH.execute(this.connection, readDataset(DATASET_FILE));
+
+            this.mockMvc.perform(MockMvcRequestBuilders
+                            .get(url, -1, -1))
+                    .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                    .andExpect(result ->
+                            assertTrue(result.getResolvedException() instanceof ConstraintViolationException));
+
+        } finally {
+            connection.close();
+        }
+    }
+
+    @Test
+    public void create_ok() throws Exception{
         final String url = "/prices/pharmacies/{pharmacyId}/medicines/{medicineId}";
 
         final long pharmacyId = 2021102601;
@@ -147,7 +186,7 @@ class PriceControllerIT extends AbstractDataIT {
     }
 
     @Test
-    public void create_entityAlreadyExists_ConstraintViolationException() throws Exception {
+    public void create_entityAlreadyExists_UniqueConstraintViolation() throws Exception {
 
         final String url = "/prices/pharmacies/{pharmacyId}/medicines/{medicineId}";
 
@@ -168,9 +207,8 @@ class PriceControllerIT extends AbstractDataIT {
                             .contentType(MediaType.APPLICATION_JSON_VALUE)
                             .content(requestBodyJson))
                     .andExpect(MockMvcResultMatchers.status().isBadRequest())
-                    .andExpect(result -> {
-                        assertTrue(result.getResolvedException() instanceof IllegalArgumentException);
-                    });
+                    .andExpect(result ->
+                            assertTrue(result.getResolvedException() instanceof UniqueConstraintViolation));
         } finally {
             connection.close();
         }

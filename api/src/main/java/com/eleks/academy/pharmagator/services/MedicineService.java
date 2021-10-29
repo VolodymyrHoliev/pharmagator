@@ -3,14 +3,13 @@ package com.eleks.academy.pharmagator.services;
 import com.eleks.academy.pharmagator.controllers.requests.MedicineRequest;
 import com.eleks.academy.pharmagator.converters.request.RequestToEntityConverter;
 import com.eleks.academy.pharmagator.entities.Medicine;
+import com.eleks.academy.pharmagator.exceptions.ObjectNotFoundException;
 import com.eleks.academy.pharmagator.projections.MedicineDto;
 import com.eleks.academy.pharmagator.repositories.MedicineRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.projection.ProjectionFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -50,7 +49,7 @@ public class MedicineService {
 
         if (dtoOptional.isEmpty()) {
 
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, errorMessage);
+            throw new ObjectNotFoundException(errorMessage);
         } else {
 
             Medicine medicine = mapper.toEntity(medicineRequest);
@@ -66,11 +65,13 @@ public class MedicineService {
     public MedicineDto findById(@NotNull Long id) {
 
         return medicineRepository.findById(id, MedicineDto.class)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, errorMessage));
+                .orElseThrow(() -> new ObjectNotFoundException(errorMessage));
     }
 
     public void delete(@NotNull Long id) {
 
-         medicineRepository.deleteById(id);
+        this.findById(id);
+
+        medicineRepository.deleteById(id);
     }
 }

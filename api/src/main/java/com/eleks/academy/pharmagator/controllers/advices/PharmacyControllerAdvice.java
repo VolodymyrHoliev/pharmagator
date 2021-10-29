@@ -1,6 +1,7 @@
 package com.eleks.academy.pharmagator.controllers.advices;
 
 import com.eleks.academy.pharmagator.exceptions.ObjectNotFoundException;
+import com.eleks.academy.pharmagator.exceptions.UniqueConstraintViolation;
 import com.eleks.academy.pharmagator.validation.ValidationErrorResponse;
 import com.eleks.academy.pharmagator.validation.Violation;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -75,5 +76,15 @@ public class PharmacyControllerAdvice {
         }
 
         return ResponseEntity.badRequest().body(errorResponse);
+    }
+
+    @ExceptionHandler(UniqueConstraintViolation.class)
+    protected ResponseEntity<Map<String, Object>> handle(UniqueConstraintViolation e) {
+
+        Map<String, Object> responseBody = new HashMap<>();
+
+        responseBody.put("errorMessage", e.getMessage());
+
+        return ResponseEntity.badRequest().body(responseBody);
     }
 }

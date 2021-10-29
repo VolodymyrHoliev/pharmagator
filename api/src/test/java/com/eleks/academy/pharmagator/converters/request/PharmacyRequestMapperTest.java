@@ -2,6 +2,7 @@ package com.eleks.academy.pharmagator.converters.request;
 
 import com.eleks.academy.pharmagator.controllers.requests.PharmacyRequest;
 import com.eleks.academy.pharmagator.entities.Pharmacy;
+import com.eleks.academy.pharmagator.exceptions.NotNullConstraintViolationException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -28,25 +29,9 @@ class PharmacyRequestMapperTest {
     }
 
     @Test
-    void toEntity_null_NullPointerException() {
+    void toEntity_null_NotNullConstraintViolationException() {
 
-        assertThrows(NullPointerException.class, () -> subject.toEntity(null));
-    }
-
-    @Test
-    void toEntity_nullTitleInPharmacyRequest_IllegalArgumentException(){
-
-        PharmacyRequest request = new PharmacyRequest(null, "link");
-
-        assertThrows(IllegalArgumentException.class,() -> subject.toEntity(request));
-    }
-
-    @Test
-    void toEntity_blankTitleInPharmacyRequest_IllegalArgumentException(){
-
-        PharmacyRequest request = new PharmacyRequest("  ", "link");
-
-        assertThrows(IllegalArgumentException.class,() -> subject.toEntity(request));
+        assertThrows(NotNullConstraintViolationException.class, () -> subject.toEntity(null));
     }
 
 }
