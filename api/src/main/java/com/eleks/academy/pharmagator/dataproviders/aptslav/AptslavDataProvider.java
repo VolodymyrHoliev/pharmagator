@@ -5,6 +5,7 @@ import com.eleks.academy.pharmagator.dataproviders.aptslav.dto.AptslavMedicineDt
 import com.eleks.academy.pharmagator.dataproviders.aptslav.dto.AptslavResponseBody;
 import com.eleks.academy.pharmagator.dataproviders.aptslav.dto.converters.ApiDtoConverter;
 import com.eleks.academy.pharmagator.dataproviders.dto.MedicineDto;
+import com.eleks.academy.pharmagator.repositories.PharmacyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,7 +13,8 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.util.List;
+import java.util.Collection;
+import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
 @RequiredArgsConstructor
@@ -25,9 +27,12 @@ public class AptslavDataProvider implements DataProvider {
     private String medicinesFetchUri;
     @Value("${pharmagator.data-providers.aptslav.medicineLinkTemplate}")
     private String medicineLinkTemplate;
+    @Value("${pharmagator.data-providers.aptslav.title}")
+    private String pharmacyTitle;
 
     private final WebClient aptslavWebClient;
     private final ApiDtoConverter<AptslavMedicineDto> apiDtoConverter;
+    private final PharmacyRepository pharmacyRepository;
 
     @Override
     public Stream<MedicineDto> loadData() {
@@ -44,24 +49,22 @@ public class AptslavDataProvider implements DataProvider {
      * @return Stream<MedicineDto>
      */
     private Stream<MedicineDto> fetchMedicines() {
-        Stream<AptslavMedicineDto> resultStream = Stream.empty();
+
         int step = 100;
-        int fetchedObjectsCounter = 0;
+
         AptslavResponseBody<AptslavMedicineDto> initialResponse = sendGetMedicinesRequest(step, 0);
+
         long dataSetCount = initialResponse.getCount();
-        List<AptslavMedicineDto> initialResponseData = initialResponse.getData();
-        resultStream = Stream.concat(resultStream, initialResponseData.stream());
-        while (fetchedObjectsCounter <= dataSetCount) {
-            fetchedObjectsCounter += step;
-            List<AptslavMedicineDto> nextResponseData = sendGetMedicinesRequest(step, fetchedObjectsCounter)
-                    .getData();
-            if (nextResponseData.isEmpty()) {
-                break;
-            } else {
-                resultStream = Stream.concat(resultStream, nextResponseData.stream());
-            }
-        }
-        return resultStream
+
+        long steps = dataSetCount / step;
+
+        Stream<AptslavMedicineDto> restOfData = LongStream.rangeClosed(1, steps)
+                .boxed()
+                .map(s -> sendGetMedicinesRequest(step, (int) (s * step)))
+                .map(AptslavResponseBody::getData)
+                .flatMap(Collection::stream);
+
+        return Stream.concat(initialResponse.getData().stream(), restOfData)
                 .map(apiDtoConverter::toMedicineDto);
     }
 
@@ -76,7 +79,7 @@ public class AptslavDataProvider implements DataProvider {
         return aptslavWebClient
                 .get()
                 .uri(uriBuilder -> uriBuilder.path(medicinesFetchUri)
-                        .queryParam("fields", "id,externalId,name,created")
+                        .queryParam("fields", "id,externalId,name,created,manufacturer")
                         .queryParam("take", step)
                         .queryParam("skip", skip)
                         .queryParam("inStock", true)
@@ -86,6 +89,4 @@ public class AptslavDataProvider implements DataProvider {
                 })
                 .block();
     }
-
-
 }
