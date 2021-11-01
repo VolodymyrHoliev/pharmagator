@@ -14,8 +14,9 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.Optional;
+import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
 @RequiredArgsConstructor
@@ -50,24 +51,22 @@ public class AptslavDataProvider implements PharmacyDataProvider {
      * @return Stream<MedicineDto>
      */
     private Stream<MedicineDto> fetchMedicines() {
-        Stream<AptslavMedicineDto> resultStream = Stream.empty();
+
         int step = 100;
-        int fetchedObjectsCounter = 0;
+
         AptslavResponseBody<AptslavMedicineDto> initialResponse = sendGetMedicinesRequest(step, 0);
+
         long dataSetCount = initialResponse.getCount();
-        List<AptslavMedicineDto> initialResponseData = initialResponse.getData();
-        resultStream = Stream.concat(resultStream, initialResponseData.stream());
-        while (fetchedObjectsCounter <= dataSetCount) {
-            fetchedObjectsCounter += step;
-            List<AptslavMedicineDto> nextResponseData = sendGetMedicinesRequest(step, fetchedObjectsCounter)
-                    .getData();
-            if (nextResponseData.isEmpty()) {
-                break;
-            } else {
-                resultStream = Stream.concat(resultStream, nextResponseData.stream());
-            }
-        }
-        return resultStream
+
+        long steps = dataSetCount / step;
+
+        Stream<AptslavMedicineDto> restOfData = LongStream.rangeClosed(1, steps)
+                .boxed()
+                .map(s -> sendGetMedicinesRequest(step, (int) (s * step)))
+                .map(AptslavResponseBody::getData)
+                .flatMap(Collection::stream);
+
+        return Stream.concat(initialResponse.getData().stream(), restOfData)
                 .map(apiDtoConverter::toMedicineDto);
     }
 
@@ -82,7 +81,7 @@ public class AptslavDataProvider implements PharmacyDataProvider {
         return aptslavWebClient
                 .get()
                 .uri(uriBuilder -> uriBuilder.path(medicinesFetchUri)
-                        .queryParam("fields", "id,externalId,name,created")
+                        .queryParam("fields", "id,externalId,name,created,manufacturer")
                         .queryParam("take", step)
                         .queryParam("skip", skip)
                         .queryParam("inStock", true)
