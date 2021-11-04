@@ -1,6 +1,5 @@
 package com.eleks.academy.pharmagator.repositories;
 
-import com.eleks.academy.pharmagator.entities.Pharmacy;
 import com.eleks.academy.pharmagator.entities.Price;
 import com.eleks.academy.pharmagator.entities.PriceId;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,8 +15,6 @@ public interface PriceRepository extends JpaRepository<Price, PriceId> {
 
     <T> Optional<T> deleteByMedicineIdAndPharmacyId(Long medicineId,
                                                     Long pharmacyId, Class<T> returnType);
-
-    Optional<Pharmacy> findByName(String title);
 
     <T> List<T> findAll(Class<T> returnType);
 
