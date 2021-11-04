@@ -11,7 +11,10 @@ import javax.persistence.Table;
 @Table(name = "pharmacies")
 public class Pharmacy {
     @Id
+
     private long id;
+
     private String name;
+
     private String medicineLinkTemplate;
 }

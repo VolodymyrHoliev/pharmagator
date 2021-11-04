@@ -12,6 +12,8 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PriceId implements Serializable {
+
     private long pharmacyId;
+
     private long medicineId;
 }

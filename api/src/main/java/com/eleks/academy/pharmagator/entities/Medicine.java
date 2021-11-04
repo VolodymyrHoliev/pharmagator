@@ -14,7 +14,10 @@ import javax.persistence.Table;
 @AllArgsConstructor
 @Table(name = "medicines")
 public class Medicine {
+
     @Id
+
     private long id;
+
     private String title;
 }

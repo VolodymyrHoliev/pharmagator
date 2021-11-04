@@ -21,17 +21,23 @@ import java.util.stream.Stream;
 @Service
 @Qualifier("aptslavDataProvider")
 public class AptslavDataProvider implements DataProvider {
+
     @Value("${pharmagator.data-providers.aptslav.categories-url}")
     private String categoriesFetchUrl;
+
     @Value("${pharmagator.data-providers.aptslav.medicines-uri}")
     private String medicinesFetchUri;
+
     @Value("${pharmagator.data-providers.aptslav.medicineLinkTemplate}")
     private String medicineLinkTemplate;
+
     @Value("${pharmagator.data-providers.aptslav.title}")
     private String pharmacyTitle;
 
     private final WebClient aptslavWebClient;
+
     private final ApiDtoConverter<AptslavMedicineDto> apiDtoConverter;
+
     private final PharmacyRepository pharmacyRepository;
 
     @Override

@@ -18,11 +18,16 @@ import java.time.Instant;
 @Table(name = "prices")
 @IdClass(PriceId.class)
 public class Price {
+
     @Id
+
     private long pharmacyId;
     @Id
     private long medicineId;
+
     private BigDecimal price;
+
     private String externalId;
+
     private Instant updatedAt;
 }
