@@ -11,9 +11,9 @@ import com.eleks.academy.pharmagator.entities.Pharmacy;
  *
  * so we could save data properly in our scheduler.
  *
- * If you're intending to use this approach you have to implement your have to
+ * If you're intending to use this approach you have to implement
  *
- * implement your database persistence logic in {@link com.eleks.academy.pharmagator.scheduler.PharmacyScheduler}
+ * your database persistence logic in {@link com.eleks.academy.pharmagator.scheduler.PharmacyScheduler}
  *
  */
 public interface PharmacyDataProvider extends DataProvider {
