@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import java.util.List;
 
 @RestController
@@ -24,7 +25,7 @@ public class PharmacyController {
     }
 
     @GetMapping("/{pharmacyId}")
-    public PharmacyDto getById(@PathVariable Long pharmacyId) {
+    public PharmacyDto getById(@PathVariable @Valid @Min(1) Long pharmacyId) {
 
         return pharmacyService.findById(pharmacyId);
     }
@@ -37,7 +38,7 @@ public class PharmacyController {
 
 
     @DeleteMapping("/{pharmacyId}")
-    public ResponseEntity<Void> deleteById(@PathVariable Long pharmacyId) {
+    public ResponseEntity<Void> deleteById(@PathVariable @Valid @Min(1) Long pharmacyId) {
 
         pharmacyService.delete(pharmacyId);
 
@@ -46,7 +47,7 @@ public class PharmacyController {
 
 
     @PutMapping("/{pharmacyId}")
-    public PharmacyDto update(@PathVariable Long pharmacyId,
+    public PharmacyDto update(@PathVariable @Valid @Min(1) Long pharmacyId,
                               @Valid @RequestBody PharmacyRequest requestBody) {
 
         return pharmacyService.update(pharmacyId, requestBody);

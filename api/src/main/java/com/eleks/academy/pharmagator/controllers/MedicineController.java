@@ -27,7 +27,7 @@ public class MedicineController {
     }
 
     @GetMapping("/{medicineId}")
-    public MedicineDto getById(@PathVariable @Min(1) Long medicineId) {
+    public MedicineDto getById(@PathVariable @Valid @Min(1) Long medicineId) {
 
         return medicineService.findById(medicineId);
     }
@@ -39,14 +39,14 @@ public class MedicineController {
     }
 
     @PutMapping("/{medicineId}")
-    public MedicineDto update(@PathVariable @Min(1) Long medicineId,
+    public MedicineDto update(@PathVariable @Valid @Min(1) Long medicineId,
                               @Valid @RequestBody MedicineRequest medicineRequest) {
 
         return medicineService.update(medicineId, medicineRequest);
     }
 
     @DeleteMapping("/{medicineId}")
-    public ResponseEntity<Void> deleteById(@PathVariable @Min(1) Long medicineId) {
+    public ResponseEntity<Void> deleteById(@PathVariable @Valid @Min(1) Long medicineId) {
 
         medicineService.delete(medicineId);
 

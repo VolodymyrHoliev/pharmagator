@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -24,23 +26,23 @@ public class PriceController {
     }
 
     @GetMapping("/pharmacies/{pharmacyId}/medicines/{medicineId}")
-    public PriceDto getById(@PathVariable Long pharmacyId,
-                            @PathVariable Long medicineId) {
+    public PriceDto getById(@PathVariable @Valid @Min(1) Long pharmacyId,
+                            @PathVariable @Valid @Min(1) Long medicineId) {
 
         return priceService.findById(medicineId, pharmacyId);
     }
 
     @PostMapping("/pharmacies/{pharmacyId}/medicines/{medicineId}")
-    public PriceDto create(@PathVariable Long medicineId,
-                           @PathVariable Long pharmacyId,
+    public PriceDto create(@PathVariable @Valid @Min(1) Long medicineId,
+                           @PathVariable @Valid @Min(1) Long pharmacyId,
                            @RequestBody PriceRequest priceRequest) {
 
         return priceService.save(priceRequest, medicineId, pharmacyId);
     }
 
     @DeleteMapping("/pharmacies/{pharmacyId}/medicines/{medicineId}")
-    public ResponseEntity<Void> deleteById(@PathVariable Long pharmacyId,
-                                           @PathVariable Long medicineId) {
+    public ResponseEntity<Void> deleteById(@PathVariable @Valid @Min(1) Long pharmacyId,
+                                           @PathVariable @Valid @Min(1) Long medicineId) {
 
         priceService.delete(medicineId, pharmacyId);
 
@@ -48,8 +50,8 @@ public class PriceController {
     }
 
     @PutMapping("/pharmacies/{pharmacyId}/medicines/{medicineId}")
-    public PriceDto update(@PathVariable Long pharmacyId,
-                           @PathVariable Long medicineId,
+    public PriceDto update(@PathVariable @Valid @Min(1) Long pharmacyId,
+                           @PathVariable @Valid @Min(1) Long medicineId,
                            @RequestBody PriceRequest priceRequest) {
 
         return priceService.update(medicineId, pharmacyId, priceRequest);

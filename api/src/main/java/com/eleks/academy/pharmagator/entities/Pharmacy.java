@@ -13,7 +13,8 @@ import javax.persistence.*;
 @Table(name = "pharmacies")
 public class Pharmacy {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     private String name;
