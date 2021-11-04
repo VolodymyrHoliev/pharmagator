@@ -34,7 +34,7 @@ public class DataProvidersConfig {
     @SneakyThrows
     @Bean(name = "aptslavWebClient")
     public WebClient aptslavWebClient() {
-        /**
+        /*
          * We had some issues with SSL certificate validation
          * @see <a href = "https://eleksjavacamp2021.slack.com/archives/C02FXNP9VL6/p1634309368128700"></a>
          * Unfortunately,I still haven`t figure out how to add key to Java keystore.
