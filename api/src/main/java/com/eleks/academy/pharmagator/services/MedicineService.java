@@ -32,7 +32,7 @@ public class MedicineService {
 
     public List<MedicineDto> findAll() {
 
-        return medicineRepository.findAll(MedicineDto.class);
+        return medicineRepository.findAllMedicines(MedicineDto.class);
     }
 
     public MedicineDto save(@NotNull MedicineRequest medicineRequest) {

@@ -37,7 +37,7 @@ public class PriceService {
 
     public List<PriceDto> findAll() {
 
-        return priceRepository.findAll(PriceDto.class);
+        return priceRepository.findAllPrices(PriceDto.class);
     }
 
     public PriceDto findById(Long medicineId, Long pharmacyId) {
