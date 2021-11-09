@@ -15,8 +15,6 @@ public interface PharmacyRepository extends JpaRepository<Pharmacy, Long> {
 
     <T> Optional<T> findByName(String title, Class<T> returnType);
 
-    Optional<Pharmacy> findByName(String title);
-
     @Query("SELECT pharmacy FROM Pharmacy pharmacy")
     <T> List<T> findAllPharmacies(Class<T> returnType);
 

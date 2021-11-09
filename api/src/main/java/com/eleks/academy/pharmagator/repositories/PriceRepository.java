@@ -15,7 +15,7 @@ public interface PriceRepository extends JpaRepository<Price, PriceId> {
     void deleteByMedicineIdAndPharmacyId(Long medicineId,
                                          Long pharmacyId);
     @Query("SELECT price FROM Price price")
-    <T> List<T> findAll(Class<T> returnType);
+    <T> List<T> findAllPrices(Class<T> returnType);
 
     <T> Optional<T> findByMedicineIdAndPharmacyId(Long medicineId,
                                                   Long pharmacyId, Class<T> returnType);
