@@ -4,6 +4,7 @@ import com.eleks.academy.pharmagator.exceptions.ObjectNotFoundException;
 import com.eleks.academy.pharmagator.exceptions.UniqueConstraintViolation;
 import com.eleks.academy.pharmagator.validation.ValidationErrorResponse;
 import com.eleks.academy.pharmagator.validation.Violation;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -31,7 +32,7 @@ public class PharmacyControllerAdvice {
 
         responseBody.put("statusCode", 404);
 
-        return ResponseEntity.badRequest().body(responseBody);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseBody);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
