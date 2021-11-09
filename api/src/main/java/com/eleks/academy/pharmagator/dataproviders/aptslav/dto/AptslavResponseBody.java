@@ -10,6 +10,9 @@ import java.util.List;
  * T type stands for DTO type we want to retrieve
  */
 public class AptslavResponseBody<T> {
+
     private List<T> data;
+
     private long count;
+
 }

@@ -12,7 +12,9 @@ import java.util.List;
 public class AptslavCategoryDto {
 
     private int id;
+
     private String name;
+
     private List<AptslavCategoryDto> children;
 
 }
