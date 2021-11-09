@@ -26,7 +26,7 @@ public class MedicineService {
 
     private final ProjectionFactory projectionFactory;
 
-    @Value("${pharmagator.error-messages.pharmacy-not-found-by-id}")
+    @Value("${pharmagator.error-messages.medicine-not-found-by-id}")
     private String errorMessage;
 
 

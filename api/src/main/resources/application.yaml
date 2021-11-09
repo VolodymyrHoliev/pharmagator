@@ -6,3 +6,8 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
+pharmagator:
+  error-messages:
+    pharmacy-not-found-by-id: Pharmacy with specified id not found
+    medicine-not-found-by-id: Medicine with specified id not found
+    price-not-found-by-id: Price with specified id not found
