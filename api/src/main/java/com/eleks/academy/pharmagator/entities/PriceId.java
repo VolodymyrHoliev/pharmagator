@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+
 import java.io.Serializable;
 
 @Data
@@ -11,7 +12,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class PriceId implements Serializable {
 
-    private long pharmacyId;
+    private Long pharmacyId;
+    private Long medicineId;
 
-    private long medicineId;
 }

@@ -1,5 +1,6 @@
 package com.eleks.academy.pharmagator.controllers;
 
+
 import com.eleks.academy.pharmagator.controllers.requests.PharmacyRequest;
 import com.eleks.academy.pharmagator.projections.PharmacyDto;
 import com.eleks.academy.pharmagator.services.PharmacyService;
@@ -11,10 +12,12 @@ import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import java.util.List;
 
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/pharmacies")
 public class PharmacyController {
+
 
     private final PharmacyService pharmacyService;
 
@@ -54,3 +57,4 @@ public class PharmacyController {
 
     }
 }
+

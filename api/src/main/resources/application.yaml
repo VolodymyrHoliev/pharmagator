@@ -6,8 +6,28 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
+
 pharmagator:
   error-messages:
     pharmacy-not-found-by-id: Pharmacy with specified id not found
     medicine-not-found-by-id: Medicine with specified id not found
     price-not-found-by-id: Price with specified id not found
+  data-providers:
+    apteka-ds:
+      url: https://api-int.apteka-ds.com.ua/api/v1
+      category-fetch-url: /category-menu
+      category-path: /cat-prods-by-page
+    pharmacy-anc:
+      url: https://anc.ua/productbrowser/v2/ua
+      category-fetch-url: /categories
+      page-size: 400
+    apteka-liki24:
+      url: https://liki24.com/vnext/api/catalogue/8000001/products
+      initial-page-index: 1
+    apteka-rozetka:
+      url: https://xl-catalog-api.rozetka.com.ua/v4
+      product-ids-fetch-url: /goods/get
+      products-fetch-url: /goods/getDetails
+      sell-status: available
+      category-id: !!str 4628621
+      medicament-category-id: !!str 4628712

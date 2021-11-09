@@ -15,4 +15,5 @@ public interface MedicineRepository extends JpaRepository<Medicine, Long> {
     <T> List<T> findAllMedicines(Class<T> returnType);
 
     <T> Optional<T> findById(Long id, Class<T> returnType);
+
 }

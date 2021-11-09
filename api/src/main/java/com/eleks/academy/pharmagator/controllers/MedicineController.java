@@ -1,5 +1,6 @@
 package com.eleks.academy.pharmagator.controllers;
 
+
 import com.eleks.academy.pharmagator.controllers.requests.MedicineRequest;
 import com.eleks.academy.pharmagator.projections.MedicineDto;
 import com.eleks.academy.pharmagator.services.MedicineService;
@@ -52,6 +53,5 @@ public class MedicineController {
 
         return ResponseEntity.noContent().build();
     }
-
 
 }

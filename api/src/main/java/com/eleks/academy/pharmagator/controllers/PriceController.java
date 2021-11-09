@@ -1,5 +1,6 @@
 package com.eleks.academy.pharmagator.controllers;
 
+
 import com.eleks.academy.pharmagator.controllers.requests.PriceRequest;
 import com.eleks.academy.pharmagator.projections.PriceDto;
 import com.eleks.academy.pharmagator.services.PriceService;
@@ -56,4 +57,5 @@ public class PriceController {
 
         return priceService.update(medicineId, pharmacyId, priceRequest);
     }
+
 }
