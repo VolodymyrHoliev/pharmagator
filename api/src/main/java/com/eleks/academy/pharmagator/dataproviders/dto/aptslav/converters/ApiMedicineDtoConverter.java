@@ -3,12 +3,16 @@ package com.eleks.academy.pharmagator.dataproviders.dto.aptslav.converters;
 import com.eleks.academy.pharmagator.dataproviders.dto.MedicineDto;
 import com.eleks.academy.pharmagator.dataproviders.dto.aptslav.AptslavMedicineDto;
 import com.eleks.academy.pharmagator.dataproviders.dto.aptslav.AptslavPriceDto;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
 
 @Service
 public class ApiMedicineDtoConverter implements ApiDtoConverter<AptslavMedicineDto> {
+
+    @Value("@{pharmagator.data-providers.aptslav.title")
+    private String pharmacyTitle;
 
     @Override
     public MedicineDto toMedicineDto(@NotNull AptslavMedicineDto apiDto) {
@@ -23,6 +27,7 @@ public class ApiMedicineDtoConverter implements ApiDtoConverter<AptslavMedicineD
                 .externalId(String.valueOf(externalId))
                 .title(title)
                 .price(aptslavPriceDto.getMin())
+                .pharmacyName(pharmacyTitle)
                 .build();
 
     }

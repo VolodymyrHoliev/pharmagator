@@ -4,7 +4,6 @@ import com.eleks.academy.pharmagator.dataproviders.dto.MedicineDto;
 import com.eleks.academy.pharmagator.dataproviders.dto.aptslav.AptslavMedicineDto;
 import com.eleks.academy.pharmagator.dataproviders.dto.aptslav.AptslavResponseBody;
 import com.eleks.academy.pharmagator.dataproviders.dto.aptslav.converters.ApiDtoConverter;
-import com.eleks.academy.pharmagator.repositories.PharmacyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -40,8 +39,6 @@ public class AptslavDataProvider implements DataProvider {
     private final WebClient aptslavWebClient;
 
     private final ApiDtoConverter<AptslavMedicineDto> apiDtoConverter;
-
-    private final PharmacyRepository pharmacyRepository;
 
     @Override
     public Stream<MedicineDto> loadData() {
