@@ -1,6 +1,5 @@
-package com.eleks.academy.pharmagator.dataproviders.aptslav;
+package com.eleks.academy.pharmagator.dataproviders;
 
-import com.eleks.academy.pharmagator.dataproviders.DataProvider;
 import com.eleks.academy.pharmagator.dataproviders.aptslav.dto.AptslavMedicineDto;
 import com.eleks.academy.pharmagator.dataproviders.aptslav.dto.AptslavResponseBody;
 import com.eleks.academy.pharmagator.dataproviders.aptslav.dto.converters.ApiDtoConverter;
@@ -34,6 +33,9 @@ public class AptslavDataProvider implements DataProvider {
     @Value("${pharmagator.data-providers.aptslav.title}")
     private String pharmacyTitle;
 
+    @Value("${pharmagator.data-providers.aptslav.page-size}")
+    private Integer pageSize;
+
     private final WebClient aptslavWebClient;
 
     private final ApiDtoConverter<AptslavMedicineDto> apiDtoConverter;
@@ -56,17 +58,15 @@ public class AptslavDataProvider implements DataProvider {
      */
     private Stream<MedicineDto> fetchMedicines() {
 
-        int step = 100;
-
-        AptslavResponseBody<AptslavMedicineDto> initialResponse = sendGetMedicinesRequest(step, 0);
+        AptslavResponseBody<AptslavMedicineDto> initialResponse = sendGetMedicinesRequest(pageSize, 0);
 
         long dataSetCount = initialResponse.getCount();
 
-        long steps = dataSetCount / step;
+        long steps = dataSetCount / pageSize;
 
         Stream<AptslavMedicineDto> restOfData = LongStream.rangeClosed(1, steps)
                 .boxed()
-                .map(s -> sendGetMedicinesRequest(step, (int) (s * step)))
+                .map(s -> sendGetMedicinesRequest(pageSize, (int) (s * pageSize)))
                 .map(AptslavResponseBody::getData)
                 .flatMap(Collection::stream);
 
