@@ -61,18 +61,27 @@ public class AptslavDataProvider implements DataProvider {
 
         AptslavResponseBody<AptslavMedicineDto> initialResponse = sendGetMedicinesRequest(pageSize, 0);
 
-        long dataSetCount = initialResponse.getCount();
+        if (initialResponse != null) {
 
-        long steps = calculateTotalPages(dataSetCount);
+            long dataSetCount = initialResponse.getCount();
 
-        Stream<AptslavMedicineDto> restOfData = LongStream.rangeClosed(1, steps)
-                .boxed()
-                .map(s -> sendGetMedicinesRequest(pageSize, (int) (s * pageSize)))
-                .map(AptslavResponseBody::getData)
-                .flatMap(Collection::stream);
+            long steps = calculateTotalPages(dataSetCount);
 
-        return Stream.concat(initialResponse.getData().stream(), restOfData)
-                .map(apiDtoConverter::toMedicineDto);
+            Stream<AptslavMedicineDto> restOfData = LongStream.rangeClosed(1, steps)
+                    .boxed()
+                    .map(s -> sendGetMedicinesRequest(pageSize, (int) (s * pageSize)))
+                    .map(AptslavResponseBody::getData)
+                    .flatMap(Collection::stream);
+
+            return Stream.concat(initialResponse.getData().stream(), restOfData)
+                    .map(apiDtoConverter::toMedicineDto);
+
+        } else {
+
+            return Stream.empty();
+
+        }
+
     }
 
     private long calculateTotalPages(long dataSetCount) {
