@@ -36,6 +36,7 @@ public class AptslavDataProvider implements DataProvider {
     @Value("${pharmagator.data-providers.aptslav.page-size}")
     private Integer pageSize;
 
+    @Qualifier("aptslavWebClient")
     private final WebClient aptslavWebClient;
 
     private final ApiDtoConverter<AptslavMedicineDto> apiDtoConverter;
@@ -74,11 +75,11 @@ public class AptslavDataProvider implements DataProvider {
                 .map(apiDtoConverter::toMedicineDto);
     }
 
-    private long calculateTotalPages(long dataSetCount){
+    private long calculateTotalPages(long dataSetCount) {
 
         long totalPages = dataSetCount / pageSize;
 
-        return dataSetCount % pageSize == 0 ? totalPages : totalPages+1;
+        return dataSetCount % pageSize == 0 ? totalPages : totalPages + 1;
 
     }
 

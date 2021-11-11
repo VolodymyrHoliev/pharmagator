@@ -16,6 +16,7 @@ pharmagator:
       categories-url: /categories
       medicines-uri: /categories/87/products
       medicineLinkTemplate: https://aptslav.com.ua:3000/api/v1/products/%d
+      page-size: 100
     apteka-ds:
       url: https://api-int.apteka-ds.com.ua/api/v1
       category-fetch-url: /category-menu
