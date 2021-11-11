@@ -4,11 +4,15 @@ package com.eleks.academy.pharmagator.dataproviders.aptslav.dto;
  * @see <a href = "https://github.com/ritalinch"</a>
  */
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.Instant;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class AptslavMedicineDto {
 
     private long id;
