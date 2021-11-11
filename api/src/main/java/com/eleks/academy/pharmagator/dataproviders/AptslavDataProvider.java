@@ -62,7 +62,7 @@ public class AptslavDataProvider implements DataProvider {
 
         long dataSetCount = initialResponse.getCount();
 
-        long steps = dataSetCount / pageSize;
+        long steps = calculateTotalPages(dataSetCount);
 
         Stream<AptslavMedicineDto> restOfData = LongStream.rangeClosed(1, steps)
                 .boxed()
@@ -72,6 +72,14 @@ public class AptslavDataProvider implements DataProvider {
 
         return Stream.concat(initialResponse.getData().stream(), restOfData)
                 .map(apiDtoConverter::toMedicineDto);
+    }
+
+    private long calculateTotalPages(long dataSetCount){
+
+        long totalPages = dataSetCount / pageSize;
+
+        return dataSetCount % pageSize == 0 ? totalPages : totalPages+1;
+
     }
 
     /**
