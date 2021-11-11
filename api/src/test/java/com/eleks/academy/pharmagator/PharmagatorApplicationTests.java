@@ -10,7 +10,7 @@ import org.springframework.test.context.ActiveProfiles;
 class PharmagatorApplicationTests {
 
     @Test
-    void contextLoads() {
-    }
+    void contextLoads(){
 
+    }
 }

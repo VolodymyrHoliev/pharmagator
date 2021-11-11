@@ -2,13 +2,16 @@ spring:
   datasource:
     url: jdbc:postgresql:pharmagator
     username: postgres
-    password: postgres
+    password: xhbynwa
   jpa:
     hibernate:
       ddl-auto: validate
 
-
 pharmagator:
+  error-messages:
+    pharmacy-not-found-by-id: Pharmacy with specified id not found
+    medicine-not-found-by-id: Medicine with specified id not found
+    price-not-found-by-id: Price with specified id not found
   data-providers:
     apteka-ds:
       url: https://api-int.apteka-ds.com.ua/api/v1
