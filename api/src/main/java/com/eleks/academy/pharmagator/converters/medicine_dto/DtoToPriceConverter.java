@@ -22,4 +22,5 @@ public class DtoToPriceConverter implements MedicineDtoConverter<Price> {
 
         return price;
     }
+
 }
