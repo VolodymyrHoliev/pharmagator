@@ -1,8 +1,5 @@
-package com.eleks.academy.pharmagator.dataproviders.aptslav.dto;
-/**
- * @author Marharyta Levtsun
- * @see <a href = "https://github.com/ritalinch"</a>
- */
+package com.eleks.academy.pharmagator.dataproviders.dto.aptslav;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

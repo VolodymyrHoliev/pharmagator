@@ -1,8 +1,8 @@
-package com.eleks.academy.pharmagator.dataproviders.aptslav.dto.converters;
+package com.eleks.academy.pharmagator.dataproviders.dto.aptslav.converters;
 
-import com.eleks.academy.pharmagator.dataproviders.aptslav.dto.AptslavMedicineDto;
-import com.eleks.academy.pharmagator.dataproviders.aptslav.dto.AptslavPriceDto;
 import com.eleks.academy.pharmagator.dataproviders.dto.MedicineDto;
+import com.eleks.academy.pharmagator.dataproviders.dto.aptslav.AptslavMedicineDto;
+import com.eleks.academy.pharmagator.dataproviders.dto.aptslav.AptslavPriceDto;
 import com.sun.istack.NotNull;
 import org.springframework.stereotype.Service;
 
