@@ -3,6 +3,7 @@ plugins {
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'java'
     id "org.sonarqube" version "3.3"
+    id 'jacoco'
 }
 
 group = 'com.eleks.academy'
@@ -49,5 +50,27 @@ test {
     useJUnitPlatform()
     testLogging {
         events = ["passed", "skipped", "failed"]
+    }
+    finalizedBy jacocoTestReport
+}
+
+jacocoTestCoverageVerification{
+    violationRules{
+        rule{
+            element = 'CLASS'
+            includes = [
+                    'com.eleks.academy.pharmagator.controllers.*',
+                    'com.eleks.academy.pharmagator.services.*',
+                    'com.eleks.academy.pharmagator.dataproviders.*'
+            ]
+            limit{
+                counter = 'LINE'
+                value = 'COVEREDRATIO'
+                minimum = 1.0
+            }
+            excludes = [
+                    'com.eleks.academy.pharmagator.dataproviders.dto.*'
+            ]
+        }
     }
 }
