@@ -53,3 +53,24 @@ test {
     }
     finalizedBy jacocoTestReport
 }
+
+jacocoTestCoverageVerification{
+    violationRules{
+        rule{
+            element = 'CLASS'
+            includes = [
+                    'com.eleks.academy.pharmagator.controllers.*',
+                    'com.eleks.academy.pharmagator.services.*',
+                    'com.eleks.academy.pharmagator.dataproviders.*'
+            ]
+            limit{
+                counter = 'LINE'
+                value = 'COVEREDRATIO'
+                minimum = 1.0
+            }
+            excludes = [
+                    'com.eleks.academy.pharmagator.dataproviders.dto.*'
+            ]
+        }
+    }
+}
