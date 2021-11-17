@@ -23,8 +23,6 @@ public class DrlzCsvParser implements ICsvParser {
      * @param modelClass should have some annotations to tell CsvParser how
      *                   to deserialize objects.
      *                   See {@link MedicineRegistryItem} for instance.
-     *                   As long as we're using BeanListProcessor, the T type should implement Comparable
-     *                   interface.
      * @return List<T>
      */
     @SuppressWarnings("unchecked")

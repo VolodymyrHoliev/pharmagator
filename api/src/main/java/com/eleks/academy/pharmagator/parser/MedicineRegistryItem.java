@@ -14,7 +14,7 @@ import java.util.Objects;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class MedicineRegistryItem implements Comparable<MedicineRegistryItem> {
+public class MedicineRegistryItem {
 
     @Parsed(field = "Торгівельне найменування")
     private String title;
@@ -40,10 +40,5 @@ public class MedicineRegistryItem implements Comparable<MedicineRegistryItem> {
     @Override
     public int hashCode() {
         return Objects.hash(title, registrationId);
-    }
-
-    @Override
-    public int compareTo(MedicineRegistryItem o) {
-        return this.getLicensedAt().compareTo(o.getLicensedAt());
     }
 }
