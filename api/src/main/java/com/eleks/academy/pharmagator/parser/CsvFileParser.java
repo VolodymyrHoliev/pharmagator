@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 @Component
-public class DrlzCsvParser implements ICsvParser {
+public class CsvFileParser implements ICsvParser {
 
     @Override
     public <T> Stream<T> parse(InputStream inputStream, Class<T> modelType) {
