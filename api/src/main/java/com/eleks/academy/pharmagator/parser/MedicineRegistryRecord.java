@@ -7,13 +7,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
-import java.util.Objects;
 
 @Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class MedicineRegistryRecord {
+class MedicineRegistryRecord {
 
     @Parsed(field = "Торгівельне найменування")
     private String title;
@@ -50,16 +49,4 @@ public class MedicineRegistryRecord {
     private List<String> manufacturersCountries;
 
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        MedicineRegistryRecord that = (MedicineRegistryRecord) o;
-        return Objects.equals(title, that.title) && Objects.equals(registrationId, that.registrationId);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(title, registrationId);
-    }
 }
