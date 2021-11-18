@@ -39,7 +39,8 @@ class MedicineRegistryRecord {
     private String compositionOfActiveSubstances;
 
     @ParsedCollection(fields = {"Виробник 1: назва українською",
-            "Виробник 2: назва українською", "Виробник 3: назва українською", "Виробник 4: назва українською",
+            "Виробник 2: назва українською", "Виробник 3: назва українською",
+            "Виробник 4: назва українською",
             "Виробник 5: назва українською"})
     private List<String> manufacturers;
 

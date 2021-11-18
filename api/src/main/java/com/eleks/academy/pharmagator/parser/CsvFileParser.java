@@ -19,19 +19,18 @@ public class CsvFileParser implements ICsvParser {
     }
 
     /**
-     *
      * @param modelClass should have some annotations to tell CsvParser how
      *                   to deserialize objects.
-     *                   See {@link MedicineRegistryRecord} for instance.
+     *                   See <a href = https://www.univocity.com/pages/univocity_parsers_tutorial#using-annotations-to-map-your-java-beans>univocity-parsers</a>
      * @return List<T>
      */
     @SuppressWarnings("unchecked")
-    private <T> List<T> parseToModel(InputStream inputStream, Class<T> modelClass) {
+    public  <T> List<T> parseToModel(InputStream inputStream, Class<T> modelClass) {
         CsvParserSettings csvParserSettings = getCsvParserSettings();
 
         BeanListProcessor<?> listProcessor = new BeanListProcessor<>(modelClass);
 
-        csvParserSettings.setRowProcessor(listProcessor);
+        csvParserSettings.setProcessor(listProcessor);
 
         CsvParser parser = getParser(csvParserSettings);
 
@@ -39,6 +38,8 @@ public class CsvFileParser implements ICsvParser {
 
         return (List<T>) listProcessor.getBeans();
     }
+
+
 
     private CsvParserSettings getCsvParserSettings() {
         CsvParserSettings parserSettings = new CsvParserSettings();
@@ -48,6 +49,8 @@ public class CsvFileParser implements ICsvParser {
         parserSettings.setMaxCharsPerColumn(8192);
 
         parserSettings.setDelimiterDetectionEnabled(true);
+
+        parserSettings.setHeaderExtractionEnabled(true);
 
         return parserSettings;
     }
