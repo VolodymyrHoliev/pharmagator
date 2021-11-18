@@ -22,7 +22,7 @@ public class CsvFileParser implements ICsvParser {
      *
      * @param modelClass should have some annotations to tell CsvParser how
      *                   to deserialize objects.
-     *                   See {@link MedicineRegistryItem} for instance.
+     *                   See {@link MedicineRegistryRecord} for instance.
      * @return List<T>
      */
     @SuppressWarnings("unchecked")
