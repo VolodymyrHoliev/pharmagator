@@ -42,9 +42,7 @@ public class AptslavDataProvider implements DataProvider {
 
     @Override
     public Stream<MedicineDto> loadData() {
-
         return fetchMedicines();
-
     }
 
 
@@ -56,8 +54,7 @@ public class AptslavDataProvider implements DataProvider {
      *
      * @return Stream<MedicineDto>
      */
-    protected Stream<MedicineDto> fetchMedicines() {
-
+    private Stream<MedicineDto> fetchMedicines() {
         AptslavResponseBody<AptslavMedicineDto> initialResponse = sendGetMedicinesRequest(pageSize, 0);
 
         if (initialResponse != null) {
@@ -74,21 +71,15 @@ public class AptslavDataProvider implements DataProvider {
 
             return Stream.concat(initialResponse.getData().stream(), restOfData)
                     .map(apiDtoConverter::toMedicineDto);
-
         } else {
-
             return Stream.empty();
-
         }
-
     }
 
-    protected long calculateTotalPages(long dataSetCount) {
-
+    private long calculateTotalPages(long dataSetCount) {
         long totalPages = dataSetCount / pageSize;
 
         return dataSetCount % pageSize == 0 ? totalPages : totalPages + 1;
-
     }
 
     /**
@@ -98,14 +89,7 @@ public class AptslavDataProvider implements DataProvider {
      * @return AptslavResponseBody<AptslavMedicineDto>
      * @see AptslavResponseBody
      */
-    protected AptslavResponseBody<AptslavMedicineDto> sendGetMedicinesRequest(int step, int skip) {
-
-        if(step <= 0 || step > 100){
-
-            throw new IllegalArgumentException("'step' param can't be less than 0 and greater than 100");
-
-        }
-
+    private AptslavResponseBody<AptslavMedicineDto> sendGetMedicinesRequest(int step, int skip) {
         return aptslavWebClient
                 .get()
                 .uri(uriBuilder -> uriBuilder.path(medicinesFetchUri)

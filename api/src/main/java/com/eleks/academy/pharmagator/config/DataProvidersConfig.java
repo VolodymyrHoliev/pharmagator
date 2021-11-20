@@ -7,6 +7,7 @@ import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.data.projection.SpelAwareProxyProjectionFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -100,8 +101,7 @@ public class DataProvidersConfig {
     }
 
     @Bean
-    public SpelAwareProxyProjectionFactory projectionFactory() {
-
+    public ProjectionFactory projectionFactory() {
         return new SpelAwareProxyProjectionFactory();
     }
 
