@@ -15,7 +15,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-class MedicineRegistryRecord {
+public class MedicineRegistryRecord {
 
     @Parsed(field = "Торгівельне найменування")
     private String title;
