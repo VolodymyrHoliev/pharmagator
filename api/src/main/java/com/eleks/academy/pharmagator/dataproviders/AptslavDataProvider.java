@@ -3,6 +3,7 @@ package com.eleks.academy.pharmagator.dataproviders;
 import com.eleks.academy.pharmagator.dataproviders.dto.MedicineDto;
 import com.eleks.academy.pharmagator.dataproviders.dto.aptslav.AptslavMedicineDto;
 import com.eleks.academy.pharmagator.dataproviders.dto.aptslav.AptslavResponseBody;
+import com.eleks.academy.pharmagator.dataproviders.dto.aptslav.ResponseBodyIsNullException;
 import com.eleks.academy.pharmagator.dataproviders.dto.aptslav.converters.ApiDtoConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -57,23 +58,18 @@ public class AptslavDataProvider implements DataProvider {
     private Stream<MedicineDto> fetchMedicines() {
         AptslavResponseBody<AptslavMedicineDto> initialResponse = sendGetMedicinesRequest(pageSize, 0);
 
-        if (initialResponse != null) {
+        long dataSetCount = initialResponse.getCount();
 
-            long dataSetCount = initialResponse.getCount();
+        long steps = calculateTotalPages(dataSetCount);
 
-            long steps = calculateTotalPages(dataSetCount);
+        Stream<AptslavMedicineDto> restOfData = LongStream.rangeClosed(1, steps)
+                .boxed()
+                .map(s -> sendGetMedicinesRequest(pageSize, (int) (s * pageSize)))
+                .map(AptslavResponseBody::getData)
+                .flatMap(Collection::stream);
 
-            Stream<AptslavMedicineDto> restOfData = LongStream.rangeClosed(1, steps)
-                    .boxed()
-                    .map(s -> sendGetMedicinesRequest(pageSize, (int) (s * pageSize)))
-                    .map(AptslavResponseBody::getData)
-                    .flatMap(Collection::stream);
-
-            return Stream.concat(initialResponse.getData().stream(), restOfData)
-                    .map(apiDtoConverter::toMedicineDto);
-        } else {
-            return Stream.empty();
-        }
+        return Stream.concat(initialResponse.getData().stream(), restOfData)
+                .map(apiDtoConverter::toMedicineDto);
     }
 
     private long calculateTotalPages(long dataSetCount) {
@@ -101,7 +97,8 @@ public class AptslavDataProvider implements DataProvider {
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<AptslavResponseBody<AptslavMedicineDto>>() {
                 })
-                .block();
+                .blockOptional()
+                .orElseThrow(ResponseBodyIsNullException::new);
     }
 
 }
