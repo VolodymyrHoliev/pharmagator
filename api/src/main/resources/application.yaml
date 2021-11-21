@@ -6,7 +6,10 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
-
+    properties:
+      hibernate:
+        hbm2dll:
+          extra_physical_table_types: MATERIALIZED VIEW
 
 pharmagator:
   data-providers:
