@@ -1,6 +1,6 @@
 package com.eleks.academy.pharmagator.parsers.csv;
 
-import com.eleks.academy.pharmagator.parsers.MedicineRegistryRecord;
+import com.eleks.academy.pharmagator.parsers.dto.MedicineRegistryRecord;
 import com.eleks.academy.pharmagator.parsers.exceptions.UnsupportedModelException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Value;

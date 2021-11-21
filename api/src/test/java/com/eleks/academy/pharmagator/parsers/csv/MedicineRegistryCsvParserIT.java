@@ -1,7 +1,6 @@
 package com.eleks.academy.pharmagator.parsers.csv;
 
-import com.eleks.academy.pharmagator.parsers.MedicineRecordProcessor;
-import com.eleks.academy.pharmagator.parsers.MedicineRegistryRecord;
+import com.eleks.academy.pharmagator.parsers.dto.MedicineRegistryRecord;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,9 +12,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 @SpringBootTest
 @ActiveProfiles("test")
 class MedicineRegistryCsvParserIT {
@@ -34,7 +33,7 @@ class MedicineRegistryCsvParserIT {
     }
 
     @Test
-    void parse_ok_medicineRegistryModel() throws IOException {
+    void parse_ok() throws IOException {
         InputStream inputStream = csvFileResource.getInputStream();
 
         List<MedicineRegistryRecord> records = subject.parse(inputStream, MedicineRegistryRecord.class)
@@ -63,33 +62,6 @@ class MedicineRegistryCsvParserIT {
 
             assertNotNull(medicineRegistryRecord.getApplicantCountry());
         });
-    }
-
-    @Test
-    void parse_ok_medicineDtoLight() throws IOException {
-        InputStream inputStream = anotherResource.getInputStream();
-
-        MedicineDtoLight dtoLight = MedicineDtoLight.builder()
-                .id("416003B28674EC50C225863100349916")
-                .title("БЕТАК")
-                .build();
-
-        MedicineDtoLight anotherDtoLight = MedicineDtoLight.builder()
-                .id("17215E70E4F26B6DC225878300453914")
-                .title("БЕТАДЕРМ®")
-                .build();
-
-        Stream<MedicineDtoLight> dtoLightStream = subject.parse(inputStream, MedicineDtoLight.class);
-
-        List<MedicineDtoLight> dtoLightList = dtoLightStream.collect(Collectors.toList());
-
-        System.out.println(dtoLightList);
-
-        assertEquals(2 , dtoLightList.size());
-
-        assertTrue(dtoLightList.contains(dtoLight));
-
-        assertTrue(dtoLightList.contains(anotherDtoLight));
     }
 
 }
