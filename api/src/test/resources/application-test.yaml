@@ -5,6 +5,9 @@ spring:
     username: postgres
     password: postgres
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
       ddl-auto: validate
+    properties:
+      hibernate:
+        hbm2dll:
+          extra_physical_table_types: MATERIALIZED VIEW
