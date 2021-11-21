@@ -1,6 +1,7 @@
 package com.eleks.academy.pharmagator.dataproviders;
 
 
+import com.eleks.academy.pharmagator.dataproviders.dto.aptslav.ResponseBodyIsNullException;
 import com.eleks.academy.pharmagator.dataproviders.dto.aptslav.converters.ApiMedicineDtoConverter;
 import okhttp3.HttpUrl;
 import okhttp3.mockwebserver.MockResponse;
@@ -36,23 +37,18 @@ class AptslavDataProviderIT {
 
     @BeforeAll
     static void beforeAll() throws IOException {
-
         mockWebServer = new MockWebServer();
 
         mockWebServer.start();
-
     }
 
     @AfterAll
     static void afterAll() throws IOException {
-
         mockWebServer.shutdown();
-
     }
 
     @Autowired
     public void setSubject(ApiMedicineDtoConverter apiMedicineDtoConverter) {
-
         HttpUrl url = mockWebServer.url(BASE_URL);
 
         WebClient webClient = WebClient.create(url.toString());
@@ -60,14 +56,11 @@ class AptslavDataProviderIT {
         subject = new AptslavDataProvider(webClient, apiMedicineDtoConverter);
 
         ReflectionTestUtils.setField(subject, "pageSize", 100);
-
     }
 
     @SuppressWarnings("ConstantConditions")
     private String getQueryParameter(RecordedRequest request, String paramName) {
-
         return request.getRequestUrl().queryParameter(paramName);
-
     }
 
     @Test
@@ -77,19 +70,33 @@ class AptslavDataProviderIT {
         mockWebServer.enqueue(
                 new MockResponse().setResponseCode(200)
                         .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                        .setBody("""
+                                {
+                                    "data":[
+                                        {
+                                            "id":459,
+                                            "name":"L-лизина эсцинат,амп,0.1%,5.0,№10",
+                                            "price":{
+                                                "min":517.52,"max":517.52
+                                                }
+                                        },
+                                        {
+                                            "id":460,
+                                            "name":"L-тироксин,тб,100мг,N50(Берлин)",
+                                            "price":{
+                                                "min":93.74,"max":93.74
+                                                }
+                                        }],
+                                "count":2
+                                }
+                                """)
         );
 
-        subject.sendGetMedicinesRequest(100, 10);
+        ReflectionTestUtils.invokeMethod(subject, "sendGetMedicinesRequest", 100, 10);
 
         RecordedRequest request = mockWebServer.takeRequest();
 
-        String s = request.getBody().readUtf8();
-
-        System.out.println(s);
-
         assertEquals("GET", request.getMethod());
-
-        System.out.println(request.getPath());
 
         assertTrue(request.getPath().startsWith(BASE_URL));
 
@@ -104,30 +111,14 @@ class AptslavDataProviderIT {
 
     }
 
-
     @Test
-    public void setMedicineRequest_invalidStepParam_IAE() {
+    void sendGetMedicinesRequest_bodyIsNull_ResponseBodyIsNullException() {
+        mockWebServer.enqueue(
+                new MockResponse().setResponseCode(200)
+                        .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+        );
 
-        assertThrows(IllegalArgumentException.class,
-                () -> subject.sendGetMedicinesRequest(1000, 10));
-
-    }
-
-    @Test
-    public void calculateTotalPages_multipleOf100_ok() {
-
-        long totalPages = subject.calculateTotalPages(1200);
-
-        assertEquals(12, totalPages);
-
-    }
-
-    @Test
-    public void calculateTotalPages_notMultipleOf100_ok() {
-
-        long totalPages = subject.calculateTotalPages(1020);
-
-        assertEquals(11, totalPages);
-
+        assertThrows(ResponseBodyIsNullException.class, () ->
+                ReflectionTestUtils.invokeMethod(subject, "sendGetMedicinesRequest", 100, 10));
     }
 }
