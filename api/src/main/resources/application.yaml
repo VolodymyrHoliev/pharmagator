@@ -9,8 +9,6 @@ spring:
 
 
 pharmagator:
-  drlz-registry:
-    file-path: src/main/resources/csv/drlz_registry.csv
   data-providers:
     apteka-ds:
       url: https://api-int.apteka-ds.com.ua/api/v1

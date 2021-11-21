@@ -1,4 +1,4 @@
-package com.eleks.academy.pharmagator.parser;
+package com.eleks.academy.pharmagator.parsers;
 
 import com.univocity.parsers.annotations.Parsed;
 import com.univocity.parsers.annotations.helpers.MethodFilter;
@@ -8,6 +8,7 @@ import com.univocity.parsers.common.processor.core.Processor;
 import com.univocity.parsers.common.record.Record;
 import lombok.Getter;
 import lombok.SneakyThrows;
+import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ import java.util.List;
  * For more details take a look at {@link MedicineRegistryRecord}
  */
 @Getter
+@Component
 public class MedicineRecordProcessor extends BeanConversionProcessor<MedicineRegistryRecord> implements Processor<ParsingContext> {
 
     private List<MedicineRegistryRecord> parsedRecords;

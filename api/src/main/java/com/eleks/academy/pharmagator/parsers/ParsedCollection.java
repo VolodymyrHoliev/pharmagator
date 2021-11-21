@@ -1,4 +1,4 @@
-package com.eleks.academy.pharmagator.parser;
+package com.eleks.academy.pharmagator.parsers;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

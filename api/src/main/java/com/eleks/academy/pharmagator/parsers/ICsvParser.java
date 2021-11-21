@@ -1,4 +1,4 @@
-package com.eleks.academy.pharmagator.parser;
+package com.eleks.academy.pharmagator.parsers;
 
 import java.io.InputStream;
 import java.util.stream.Stream;

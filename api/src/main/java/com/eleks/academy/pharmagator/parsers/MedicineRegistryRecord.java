@@ -1,4 +1,4 @@
-package com.eleks.academy.pharmagator.parser;
+package com.eleks.academy.pharmagator.parsers;
 
 import com.univocity.parsers.annotations.Parsed;
 import lombok.AllArgsConstructor;
@@ -8,6 +8,9 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+/**
+ * This DTO represents a record from csv/drlz_registry_utf-8.csv
+ */
 @Builder
 @Data
 @NoArgsConstructor
@@ -48,6 +51,5 @@ class MedicineRegistryRecord {
             "Виробник 2: країна", "Виробник 3: країна", "Виробник 4: країна",
             "Виробник 5: країна"})
     private List<String> manufacturersCountries;
-
 
 }
