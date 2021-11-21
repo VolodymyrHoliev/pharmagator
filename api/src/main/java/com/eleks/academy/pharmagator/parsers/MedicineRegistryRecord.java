@@ -35,7 +35,7 @@ public class MedicineRegistryRecord {
     @Parsed(field = "Кількість виробників")
     private String numberOfManufacturers;
 
-    @Parsed(field = "Умови відпуску")
+    @Parsed(field = "Форма випуску")
     private String dosageForm;
 
     @Parsed(field = "Склад (діючі)")
