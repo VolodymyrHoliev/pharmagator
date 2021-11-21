@@ -1,8 +1,13 @@
 package com.eleks.academy.pharmagator.dataproviders;
 
 
+import com.eleks.academy.pharmagator.dataproviders.dto.aptslav.AptslavPriceDto;
+import com.eleks.academy.pharmagator.dataproviders.dto.aptslav.AptslavResponseBody;
+import com.eleks.academy.pharmagator.dataproviders.dto.aptslav.AptslavResponseEntity;
 import com.eleks.academy.pharmagator.dataproviders.dto.aptslav.ResponseBodyIsNullException;
 import com.eleks.academy.pharmagator.dataproviders.dto.aptslav.converters.ApiMedicineDtoConverter;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.HttpUrl;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -21,6 +26,8 @@ import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -65,31 +72,36 @@ class AptslavDataProviderIT {
 
     @Test
     @SuppressWarnings("ConstantConditions")
-    public void setMedicineRequest_ok() throws InterruptedException {
+    void setMedicineRequest_ok() throws InterruptedException, JsonProcessingException {
+        AptslavResponseEntity responseEntity = AptslavResponseEntity.builder()
+                .externalId("123")
+                .id(125L)
+                .name("Medicine_1")
+                .created("2021-05-07T18:38:00.722Z")
+                .price(new AptslavPriceDto(BigDecimal.valueOf(10), BigDecimal.valueOf(20)))
+                .manufacturer("Manufacturer")
+                .build();
+
+        AptslavResponseEntity anotherResponseEntity = AptslavResponseEntity.builder()
+                .externalId("65513")
+                .id(532L)
+                .name("Medicine_2")
+                .created("2021-05-07T18:38:00.722Z")
+                .price(new AptslavPriceDto(BigDecimal.valueOf(40), BigDecimal.valueOf(60)))
+                .manufacturer("Manufacturer_2")
+                .build();
+
+        AptslavResponseBody<Object> responseBody = AptslavResponseBody.builder()
+                .data(List.of(responseEntity, anotherResponseEntity))
+                .count(2L)
+                .build();
+
+        ObjectMapper objectMapper = new ObjectMapper();
 
         mockWebServer.enqueue(
                 new MockResponse().setResponseCode(200)
                         .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                        .setBody("""
-                                {
-                                    "data":[
-                                        {
-                                            "id":459,
-                                            "name":"L-лизина эсцинат,амп,0.1%,5.0,№10",
-                                            "price":{
-                                                "min":517.52,"max":517.52
-                                                }
-                                        },
-                                        {
-                                            "id":460,
-                                            "name":"L-тироксин,тб,100мг,N50(Берлин)",
-                                            "price":{
-                                                "min":93.74,"max":93.74
-                                                }
-                                        }],
-                                "count":2
-                                }
-                                """)
+                        .setBody(objectMapper.writeValueAsString(responseBody))
         );
 
         ReflectionTestUtils.invokeMethod(subject, "sendGetMedicinesRequest", 100, 10);
@@ -108,7 +120,6 @@ class AptslavDataProviderIT {
         assertEquals("10", getQueryParameter(request, "skip"));
 
         assertEquals("true", getQueryParameter(request, "inStock"));
-
     }
 
     @Test
@@ -118,7 +129,77 @@ class AptslavDataProviderIT {
                         .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
         );
 
-        assertThrows(ResponseBodyIsNullException.class, () ->
-                ReflectionTestUtils.invokeMethod(subject, "sendGetMedicinesRequest", 100, 10));
+        String exceptionMessage = assertThrows(ResponseBodyIsNullException.class, () ->
+                ReflectionTestUtils.invokeMethod(subject, "sendGetMedicinesRequest", 100, 10))
+                .getMessage();
+        assertEquals("Response body is null", exceptionMessage);
     }
+
+    @Test
+    void calculateTotalPages_ok_multipleOf100(){
+        Long pagesCount = ReflectionTestUtils
+                .invokeMethod(subject, "calculateTotalPages", 500L);
+
+        assertEquals(5, pagesCount);
+    }
+
+    @Test
+    void calculateTotalPages_ok_notMultipleOf100(){
+        Long pagesCount = ReflectionTestUtils
+                .invokeMethod(subject, "calculateTotalPages", 594L);
+
+        assertEquals(6, pagesCount);
+    }
+
+    @Test
+    void fetchMedicines_ok() throws JsonProcessingException, InterruptedException {
+        AptslavResponseEntity responseEntity = AptslavResponseEntity.builder()
+                .externalId("123")
+                .id(125L)
+                .name("Medicine_1")
+                .created("2021-05-07T18:38:00.722Z")
+                .price(new AptslavPriceDto(BigDecimal.valueOf(10), BigDecimal.valueOf(20)))
+                .manufacturer("Manufacturer")
+                .build();
+
+        AptslavResponseEntity anotherResponseEntity = AptslavResponseEntity.builder()
+                .externalId("65513")
+                .id(532L)
+                .name("Medicine_2")
+                .created("2021-05-07T18:38:00.722Z")
+                .price(new AptslavPriceDto(BigDecimal.valueOf(40), BigDecimal.valueOf(60)))
+                .manufacturer("Manufacturer_2")
+                .build();
+
+        AptslavResponseBody<Object> responseBody = AptslavResponseBody.builder()
+                .data(List.of(responseEntity, anotherResponseEntity))
+                .count(2L)
+                .build();
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        mockWebServer.enqueue(
+                new MockResponse().setResponseCode(200)
+                        .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                        .setBody(objectMapper.writeValueAsString(responseBody))
+        );
+
+        subject.loadData();
+
+        RecordedRequest request = mockWebServer.takeRequest();
+
+        assertEquals("GET", request.getMethod());
+
+        assertTrue(request.getPath().startsWith(BASE_URL));
+
+        assertEquals("id,externalId,name,created,manufacturer",
+                getQueryParameter(request, "fields"));
+
+        assertEquals("100", getQueryParameter(request, "take"));
+
+        assertEquals("0", getQueryParameter(request, "skip"));
+
+        assertEquals("true", getQueryParameter(request, "inStock"));
+    }
+
 }

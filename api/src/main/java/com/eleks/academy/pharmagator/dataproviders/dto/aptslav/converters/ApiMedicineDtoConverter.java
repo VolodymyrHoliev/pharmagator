@@ -16,7 +16,6 @@ public class ApiMedicineDtoConverter implements ApiDtoConverter<AptslavMedicineD
 
     @Override
     public MedicineDto toMedicineDto(@NotNull AptslavMedicineDto apiDto) {
-
         checkArgument(apiDto);
 
         String title = apiDto.getName();
@@ -31,40 +30,30 @@ public class ApiMedicineDtoConverter implements ApiDtoConverter<AptslavMedicineD
                 .price(aptslavPriceDto.getMin())
                 .pharmacyName(pharmacyTitle)
                 .build();
-
     }
 
     private void checkArgument(AptslavMedicineDto arg){
-
         String title = arg.getName();
 
         if(title == null || title.isBlank()){
-
             throw new IllegalArgumentException("AptslavMedicineDto has null or blank 'name' ");
         }
 
         AptslavPriceDto price = arg.getPrice();
 
         if(price == null){
-
             throw new IllegalArgumentException("AptslavMedicineDto has null 'price'");
-
         }
 
         if(price.getMin().intValue() < 0 || price.getMax().intValue() < 0){
-
             throw new IllegalArgumentException("Min and max price values should be greater than 0");
-
         }
 
         long externalId = arg.getExternalId();
 
         if(externalId <= 0){
-
             throw new IllegalArgumentException("Invalid 'externalId' value");
-
         }
-
     }
 
 }

@@ -16,7 +16,6 @@ class ApiMedicineDtoConverterTest {
 
     @Test
     void toMedicineDto_ok() {
-
         final long expectedId = 1L;
 
         final String expectedTitle = "title";
@@ -44,19 +43,15 @@ class ApiMedicineDtoConverterTest {
 
         //pharmacy name is a @Value
         assertNull(medicineDto.getPharmacyName());
-
     }
 
     @Test
-    public void toMedicineDto_passedNullArg_NPE(){
-
+    void toMedicineDto_passedNullArg_NPE(){
         assertThrows(NullPointerException.class, () -> subject.toMedicineDto(null));
-
     }
 
     @Test
-    public void toMedicineDto_apiDtoHasNullPrice_IAE(){
-
+    void toMedicineDto_apiDtoHasNullPrice_IAE(){
         AptslavMedicineDto aptslavMedicineDto = AptslavMedicineDto.builder()
                 .externalId(1L)
                 .id(1L)
@@ -66,12 +61,10 @@ class ApiMedicineDtoConverterTest {
                 .build();
 
         assertThrows(IllegalArgumentException.class, () -> subject.toMedicineDto(aptslavMedicineDto));
-
     }
 
     @Test
-    public void toMedicineDto_apiDtoHasBlankTitle_IAE(){
-
+    void toMedicineDto_apiDtoHasBlankTitle_IAE(){
         AptslavPriceDto price = new AptslavPriceDto();
 
         price.setMin(BigDecimal.valueOf(10));
@@ -87,12 +80,10 @@ class ApiMedicineDtoConverterTest {
                 .build();
 
         assertThrows(IllegalArgumentException.class, () -> subject.toMedicineDto(aptslavMedicineDto));
-
     }
 
     @Test
-    public void toMedicineDto_apiDtoHasNullTitle_IAE(){
-
+    void toMedicineDto_apiDtoHasNullTitle_IAE(){
         AptslavPriceDto price = new AptslavPriceDto();
 
         price.setMin(BigDecimal.valueOf(10));
@@ -108,12 +99,10 @@ class ApiMedicineDtoConverterTest {
                 .build();
 
         assertThrows(IllegalArgumentException.class, () -> subject.toMedicineDto(aptslavMedicineDto));
-
     }
 
     @Test
-    public void toMedicineDto_apiDtoHasNegativeMinPrice_IAE(){
-
+    void toMedicineDto_apiDtoHasNegativeMinPrice_IAE(){
         AptslavPriceDto price = new AptslavPriceDto();
 
         price.setMin(BigDecimal.valueOf(-1));
@@ -129,12 +118,10 @@ class ApiMedicineDtoConverterTest {
                 .build();
 
         assertThrows(IllegalArgumentException.class, () -> subject.toMedicineDto(aptslavMedicineDto));
-
     }
 
     @Test
-    public void toMedicineDto_apiDtoHasNegativeMaxPrice_IAE(){
-
+    void toMedicineDto_apiDtoHasNegativeMaxPrice_IAE(){
         AptslavPriceDto price = new AptslavPriceDto();
 
         price.setMin(BigDecimal.valueOf(10));
@@ -150,12 +137,10 @@ class ApiMedicineDtoConverterTest {
                 .build();
 
         assertThrows(IllegalArgumentException.class, () -> subject.toMedicineDto(aptslavMedicineDto));
-
     }
 
     @Test
-    public void toMedicineDto_apiDtoHasNegativeExtId_IAE(){
-
+    void toMedicineDto_apiDtoHasNegativeExtId_IAE(){
         AptslavPriceDto price = new AptslavPriceDto();
 
         price.setMin(BigDecimal.valueOf(10));
@@ -171,7 +156,6 @@ class ApiMedicineDtoConverterTest {
                 .build();
 
         assertThrows(IllegalArgumentException.class, () -> subject.toMedicineDto(aptslavMedicineDto));
-
     }
 
 }
