@@ -1,7 +1,7 @@
 package com.eleks.academy.pharmagator.parsers.csv;
 
 import com.eleks.academy.pharmagator.parsers.ICsvParser;
-import com.eleks.academy.pharmagator.parsers.ParsedCollection;
+import com.eleks.academy.pharmagator.parsers.annotations.ParsedCollection;
 import com.eleks.academy.pharmagator.parsers.exceptions.UnsupportedModelException;
 import com.univocity.parsers.common.processor.BeanListProcessor;
 import com.univocity.parsers.csv.CsvParser;

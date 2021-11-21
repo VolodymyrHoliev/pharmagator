@@ -1,6 +1,6 @@
 package com.eleks.academy.pharmagator.parsers.csv;
 
-import com.eleks.academy.pharmagator.parsers.MedicineRecordProcessor;
+import com.eleks.academy.pharmagator.parsers.annotations.ParsedCollection;
 import com.univocity.parsers.csv.CsvParser;
 import com.univocity.parsers.csv.CsvParserSettings;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +10,7 @@ import java.util.List;
 
 /**
  * This parser is quite similar to {@link CsvFileParser} except this parser
- * contains processor which can deal with {@link com.eleks.academy.pharmagator.parsers.ParsedCollection}
+ * contains processor which can deal with {@link ParsedCollection}
  * For more details about file records processing see {@link MedicineRecordProcessor}
  */
 @RequiredArgsConstructor

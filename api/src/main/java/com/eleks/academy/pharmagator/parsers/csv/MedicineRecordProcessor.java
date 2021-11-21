@@ -1,5 +1,7 @@
-package com.eleks.academy.pharmagator.parsers;
+package com.eleks.academy.pharmagator.parsers.csv;
 
+import com.eleks.academy.pharmagator.parsers.annotations.ParsedCollection;
+import com.eleks.academy.pharmagator.parsers.dto.MedicineRegistryRecord;
 import com.univocity.parsers.annotations.Parsed;
 import com.univocity.parsers.annotations.helpers.MethodFilter;
 import com.univocity.parsers.common.ParsingContext;

@@ -1,5 +1,6 @@
-package com.eleks.academy.pharmagator.parsers;
+package com.eleks.academy.pharmagator.parsers.dto;
 
+import com.eleks.academy.pharmagator.parsers.annotations.ParsedCollection;
 import com.univocity.parsers.annotations.Parsed;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
