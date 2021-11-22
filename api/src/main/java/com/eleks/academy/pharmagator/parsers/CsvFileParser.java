@@ -1,8 +1,7 @@
-package com.eleks.academy.pharmagator.parsers.csv;
+package com.eleks.academy.pharmagator.parsers;
 
-import com.eleks.academy.pharmagator.parsers.ICsvParser;
 import com.eleks.academy.pharmagator.parsers.annotations.ParsedCollection;
-import com.eleks.academy.pharmagator.parsers.exceptions.UnsupportedModelException;
+import com.eleks.academy.pharmagator.parsers.exceptions.UnsupportedModelTypeException;
 import com.univocity.parsers.common.processor.BeanListProcessor;
 import com.univocity.parsers.csv.CsvParser;
 import com.univocity.parsers.csv.CsvParserSettings;
@@ -13,8 +12,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
+/**
+ * This parser wraps {@link CsvParser} and contains default
+ * {@link CsvParserSettings} and {@link com.univocity.parsers.common.processor.core.Processor}
+ * objects.
+ */
 @AllArgsConstructor
-public sealed class CsvFileParser implements ICsvParser permits MedicineRegistryCsvParser {
+public class CsvFileParser implements ICsvParser {
 
     /**
      * @param modelType should have some annotations to tell CsvParser how
@@ -24,11 +28,11 @@ public sealed class CsvFileParser implements ICsvParser permits MedicineRegistry
      *                  <p>
      *                  See <a href = https://www.univocity.com/pages/univocity_parsers_tutorial#using-annotations-to-map-your-java-beans>univocity-parsers</a>
      * @return List<T>
-     * @throws UnsupportedModelException in case your model contains fields, annotated with {@link ParsedCollection}
+     * @throws UnsupportedModelTypeException in case your model contains fields, annotated with {@link ParsedCollection}
      */
 
     @Override
-    public <T> Stream<T> parse(InputStream inputStream, Class<T> modelType) throws UnsupportedModelException {
+    public <T> Stream<T> parse(InputStream inputStream, Class<T> modelType) throws UnsupportedModelTypeException {
         return parseToModel(inputStream, modelType)
                 .stream();
     }
@@ -39,10 +43,10 @@ public sealed class CsvFileParser implements ICsvParser permits MedicineRegistry
      *                   *                   Make sure you're importing annotation from the
      *                   *                   correct package {@link com.univocity.parsers.annotations.Parsed}
      * @return List<T>, keep in mind, that properties of T may be nullable
-     * @throws UnsupportedModelException in case your model contains fields, annotated with {@link ParsedCollection}
+     * @throws UnsupportedModelTypeException in case your model contains fields, annotated with {@link ParsedCollection}
      */
     @SuppressWarnings("unchecked")
-    public <T> List<T> parseToModel(InputStream inputStream, Class<T> modelClass) throws UnsupportedModelException {
+    public <T> List<T> parseToModel(InputStream inputStream, Class<T> modelClass) throws UnsupportedModelTypeException {
         checkModelClass(modelClass);
 
         CsvParserSettings csvParserSettings = getCsvParserSettings();
@@ -59,7 +63,7 @@ public sealed class CsvFileParser implements ICsvParser permits MedicineRegistry
     }
 
 
-    protected CsvParserSettings getCsvParserSettings() {
+    private CsvParserSettings getCsvParserSettings() {
         CsvParserSettings parserSettings = new CsvParserSettings();
 
         //the default value is 4096 which is not suitable for parsing
@@ -73,16 +77,24 @@ public sealed class CsvFileParser implements ICsvParser permits MedicineRegistry
         return parserSettings;
     }
 
-    protected CsvParser getParser(CsvParserSettings settings) {
+    private CsvParser getParser(CsvParserSettings settings) {
         return new CsvParser(settings);
     }
 
-    private void checkModelClass(Class<?> modelClass) {
+    /**
+     * Checks whether modelClass contains field, annotated with {@link ParsedCollection}
+     * This parser use one of the default univocity bean processor which knows nothing
+     * about {@link ParsedCollection} and how to handle it.
+     *
+     * @throws UnsupportedModelTypeException if at least one field of modelClass
+     * contains {@link ParsedCollection} annotation
+     */
+    private void checkModelClass(Class<?> modelClass) throws UnsupportedModelTypeException{
         Arrays.stream(modelClass.getDeclaredFields())
                 .toList()
                 .forEach(field -> {
                     if (field.isAnnotationPresent(ParsedCollection.class)) {
-                        throw new UnsupportedModelException();
+                        throw new UnsupportedModelTypeException();
                     }
                 });
     }

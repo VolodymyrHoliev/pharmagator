@@ -1,6 +1,8 @@
 package com.eleks.academy.pharmagator.parsers.csv;
 
+import com.eleks.academy.pharmagator.parsers.MedicineRegistryCsvParser;
 import com.eleks.academy.pharmagator.parsers.dto.MedicineRegistryRecord;
+import com.eleks.academy.pharmagator.parsers.processors.MedicineRecordProcessor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,7 +38,7 @@ class MedicineRegistryCsvParserIT {
     void parse_ok() throws IOException {
         InputStream inputStream = csvFileResource.getInputStream();
 
-        List<MedicineRegistryRecord> records = subject.parse(inputStream, MedicineRegistryRecord.class)
+        List<MedicineRegistryRecord> records = subject.parse(inputStream)
                 .collect(Collectors.toList());
 
         assertEquals(5, records.size());

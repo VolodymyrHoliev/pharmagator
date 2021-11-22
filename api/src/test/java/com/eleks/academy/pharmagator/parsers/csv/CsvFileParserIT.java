@@ -1,7 +1,8 @@
 package com.eleks.academy.pharmagator.parsers.csv;
 
+import com.eleks.academy.pharmagator.parsers.CsvFileParser;
 import com.eleks.academy.pharmagator.parsers.dto.MedicineRegistryRecord;
-import com.eleks.academy.pharmagator.parsers.exceptions.UnsupportedModelException;
+import com.eleks.academy.pharmagator.parsers.exceptions.UnsupportedModelTypeException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -65,7 +66,7 @@ class CsvFileParserIT {
     void parse_unsupportedModelType_UnsupportedModelException() throws IOException {
         InputStream inputStream = csvFileResource.getInputStream();
 
-        String errorMessage = assertThrows(UnsupportedModelException.class,
+        String errorMessage = assertThrows(UnsupportedModelTypeException.class,
                 () -> subject.parse(inputStream, MedicineRegistryRecord.class))
                 .getMessage();
 

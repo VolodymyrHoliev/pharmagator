@@ -1,6 +1,6 @@
 package com.eleks.academy.pharmagator.parsers.exceptions;
 
-public class UnsupportedModelException extends RuntimeException {
+public class UnsupportedModelTypeException extends RuntimeException {
 
     @Override
     public String getMessage() {

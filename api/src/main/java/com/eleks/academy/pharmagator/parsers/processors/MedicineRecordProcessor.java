@@ -1,4 +1,4 @@
-package com.eleks.academy.pharmagator.parsers.csv;
+package com.eleks.academy.pharmagator.parsers.processors;
 
 import com.eleks.academy.pharmagator.parsers.annotations.ParsedCollection;
 import com.eleks.academy.pharmagator.parsers.dto.MedicineRegistryRecord;

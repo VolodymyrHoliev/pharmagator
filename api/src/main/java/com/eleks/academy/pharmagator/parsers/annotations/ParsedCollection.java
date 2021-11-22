@@ -1,5 +1,7 @@
 package com.eleks.academy.pharmagator.parsers.annotations;
 
+import com.eleks.academy.pharmagator.parsers.processors.MedicineRecordProcessor;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -10,7 +12,7 @@ import java.lang.annotation.Target;
  * For instance, in our .csv file we can have a few headers which are very similar
  * (e.g 'Manufacturer 1','Manufacturer 2' etc.)
  * Most likely, we would like to save values into one list
- * Check out {@link com.eleks.academy.pharmagator.parsers.csv.MedicineRecordProcessor} to see
+ * Check out {@link MedicineRecordProcessor} to see
  * how it works
  */
 @Target(ElementType.FIELD)
