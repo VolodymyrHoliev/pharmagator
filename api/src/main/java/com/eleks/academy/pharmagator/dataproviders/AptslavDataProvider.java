@@ -21,9 +21,6 @@ import java.util.stream.Stream;
 @Qualifier("aptslavDataProvider")
 public class AptslavDataProvider implements DataProvider {
 
-    @Value("${pharmagator.data-providers.aptslav.categories-url}")
-    private String categoriesFetchUrl;
-
     @Value("${pharmagator.data-providers.aptslav.medicines-uri}")
     private String medicinesFetchUri;
 
