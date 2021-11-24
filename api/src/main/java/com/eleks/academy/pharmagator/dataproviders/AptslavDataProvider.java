@@ -38,9 +38,11 @@ public class AptslavDataProvider implements DataProvider {
 
     private final ApiDtoConverter<AptslavMedicineDto> apiDtoConverter;
 
+    private static final int RECOMMENDED_CALLS_LIMIT = 3;
+
     @Override
     public Stream<MedicineDto> loadData() {
-        return fetchMedicines();
+        return fetchMedicines(RECOMMENDED_CALLS_LIMIT);
     }
 
 
@@ -52,14 +54,10 @@ public class AptslavDataProvider implements DataProvider {
      *
      * @return Stream<MedicineDto>
      */
-    private Stream<MedicineDto> fetchMedicines() {
+    private Stream<MedicineDto> fetchMedicines(int callsLimit) {
         AptslavResponseBody<AptslavMedicineDto> initialResponse = sendGetMedicinesRequest(pageSize, 0);
 
-        long dataSetCount = initialResponse.getCount();
-
-        long steps = calculateTotalPages(dataSetCount);
-
-        Stream<AptslavMedicineDto> restOfData = LongStream.rangeClosed(1, steps)
+        Stream<AptslavMedicineDto> restOfData = LongStream.rangeClosed(1, callsLimit)
                 .boxed()
                 .map(s -> sendGetMedicinesRequest(pageSize, (int) (s * pageSize)))
                 .map(AptslavResponseBody::getData)
