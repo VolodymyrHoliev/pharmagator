@@ -32,26 +32,26 @@ public class ApiMedicineDtoConverter implements ApiDtoConverter<AptslavMedicineD
                 .build();
     }
 
-    private void checkArgument(AptslavMedicineDto arg){
+    private void checkArgument(AptslavMedicineDto arg) {
         String title = arg.getName();
 
-        if(title == null || title.isBlank()){
+        if (title == null || title.isBlank()) {
             throw new IllegalArgumentException("AptslavMedicineDto has null or blank 'name' ");
         }
 
         AptslavPriceDto price = arg.getPrice();
 
-        if(price == null){
+        if (price == null) {
             throw new IllegalArgumentException("AptslavMedicineDto has null 'price'");
         }
 
-        if(price.getMin().intValue() < 0 || price.getMax().intValue() < 0){
+        if (price.getMin().intValue() < 0 || price.getMax().intValue() < 0) {
             throw new IllegalArgumentException("Min and max price values should be greater than 0");
         }
 
         long externalId = arg.getExternalId();
 
-        if(externalId <= 0){
+        if (externalId <= 0) {
             throw new IllegalArgumentException("Invalid 'externalId' value");
         }
     }

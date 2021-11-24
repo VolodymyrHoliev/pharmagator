@@ -136,7 +136,7 @@ class AptslavDataProviderIT {
     }
 
     @Test
-    void calculateTotalPages_ok_multipleOf100(){
+    void calculateTotalPages_ok_multipleOf100() {
         Long pagesCount = ReflectionTestUtils
                 .invokeMethod(subject, "calculateTotalPages", 500L);
 
@@ -144,7 +144,7 @@ class AptslavDataProviderIT {
     }
 
     @Test
-    void calculateTotalPages_ok_notMultipleOf100(){
+    void calculateTotalPages_ok_notMultipleOf100() {
         Long pagesCount = ReflectionTestUtils
                 .invokeMethod(subject, "calculateTotalPages", 594L);
 

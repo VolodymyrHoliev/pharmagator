@@ -14,7 +14,7 @@ spring:
 pharmagator:
   data-providers:
     aptslav:
-      title: Аптека "Славутич"
+      title: apteka-slavutych
       base-url: https://aptslav.com.ua:3000/api/v1
       categories-url: /categories
       medicines-uri: /categories/87/products

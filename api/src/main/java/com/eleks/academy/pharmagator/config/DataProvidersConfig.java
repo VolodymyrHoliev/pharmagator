@@ -70,16 +70,10 @@ public class DataProvidersConfig {
                 .baseUrl(pharmacyRozetkaBaseUrl)
                 .build();
     }
+
     @SneakyThrows
     @Bean(name = "aptslavWebClient")
     public WebClient aptslavWebClient() {
-        /*
-         * We had some issues with SSL certificate validation
-         * @see <a href = "https://eleksjavacamp2021.slack.com/archives/C02FXNP9VL6/p1634309368128700"></a>
-         * Unfortunately,I still haven`t figure out how to add key to Java keystore.
-         * Therefore,we were forced to override SSL context,which is not a good practice.
-         */
-
         SslContext sslContext = SslContextBuilder
                 .forClient()
                 .trustManager(InsecureTrustManagerFactory.INSTANCE)
@@ -97,7 +91,6 @@ public class DataProvidersConfig {
                 .clientConnector(connector)
                 .baseUrl(aptslavBaseUrl)
                 .build();
-
     }
 
     @Bean
