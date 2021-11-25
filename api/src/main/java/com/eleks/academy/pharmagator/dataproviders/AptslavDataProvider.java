@@ -33,6 +33,9 @@ public class AptslavDataProvider implements DataProvider {
     @Value("${pharmagator.data-providers.aptslav.page-size}")
     private Integer pageSize;
 
+    @Value("${pharmagator.data-providers.aptslav.api-calls-limit}")
+    private Integer apiCallsLimit;
+
     @Qualifier("aptslavWebClient")
     private final WebClient aptslavWebClient;
 

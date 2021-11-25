@@ -63,6 +63,8 @@ class AptslavDataProviderIT {
         subject = new AptslavDataProvider(webClient, apiMedicineDtoConverter);
 
         ReflectionTestUtils.setField(subject, "pageSize", 100);
+
+        ReflectionTestUtils.setField(subject, "apiCallsLimit", 3);
     }
 
     @SuppressWarnings("ConstantConditions")
