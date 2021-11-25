@@ -41,7 +41,6 @@ class ApiMedicineDtoConverterTest {
 
         assertEquals(expectedTitle, medicineDto.getTitle());
 
-        //pharmacy name is a @Value
         assertNull(medicineDto.getPharmacyName());
     }
 

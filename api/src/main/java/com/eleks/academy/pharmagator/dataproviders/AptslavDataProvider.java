@@ -41,11 +41,10 @@ public class AptslavDataProvider implements DataProvider {
 
     private final ApiDtoConverter<AptslavMedicineDto> apiDtoConverter;
 
-    private static final int RECOMMENDED_CALLS_LIMIT = 3;
 
     @Override
     public Stream<MedicineDto> loadData() {
-        return fetchMedicines(RECOMMENDED_CALLS_LIMIT);
+        return fetchMedicines(apiCallsLimit);
     }
 
     /**
