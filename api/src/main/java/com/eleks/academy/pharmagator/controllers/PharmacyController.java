@@ -1,6 +1,7 @@
 package com.eleks.academy.pharmagator.controllers;
 
 import com.eleks.academy.pharmagator.dataproviders.dto.input.PharmacyDto;
+import com.eleks.academy.pharmagator.exceptions.InvalidIdentifierException;
 import com.eleks.academy.pharmagator.services.PharmacyService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -30,7 +31,7 @@ public class PharmacyController {
     public ResponseEntity<PharmacyDto> getById(@PathVariable Long id) {
         return pharmacyService.findById(id)
                 .map(pharmacy -> ResponseEntity.ok(modelMapper.map(pharmacy, PharmacyDto.class)))
-                .orElseGet(() -> ResponseEntity.notFound().build());
+                .orElseThrow(() -> new InvalidIdentifierException(id));
     }
 
     @PostMapping
@@ -45,7 +46,7 @@ public class PharmacyController {
 
         return pharmacyService.update(id, pharmacyDto)
                 .map(pharmacy -> ResponseEntity.ok(modelMapper.map(pharmacy, PharmacyDto.class)))
-                .orElseGet(() -> ResponseEntity.notFound().build());
+                .orElseThrow(() -> new InvalidIdentifierException(id));
     }
 
     @DeleteMapping("/{id:[\\d]+}")

@@ -1,6 +1,7 @@
 package com.eleks.academy.pharmagator.controllers;
 
 import com.eleks.academy.pharmagator.dataproviders.dto.input.PriceDto;
+import com.eleks.academy.pharmagator.exceptions.InvalidIdentifierException;
 import com.eleks.academy.pharmagator.services.PriceService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -33,7 +34,7 @@ public class PriceController {
 
         return priceService.findById(pharmacyId, medicineId)
                 .map(price -> ResponseEntity.ok(modelMapper.map(price, PriceDto.class)))
-                .orElseGet(() -> ResponseEntity.notFound().build());
+                .orElseThrow(() -> new InvalidIdentifierException(pharmacyId, medicineId));
     }
 
     @PutMapping("/pharmacyId/{pharmacyId:[\\d]+}/medicineId/{medicineId:[\\d]+}")
@@ -44,7 +45,7 @@ public class PriceController {
 
         return priceService.update(pharmacyId, medicineId, priceDto)
                 .map(price -> ResponseEntity.ok(modelMapper.map(price, PriceDto.class)))
-                .orElseGet(() -> ResponseEntity.notFound().build());
+                .orElseThrow(() -> new InvalidIdentifierException(pharmacyId, medicineId));
     }
 
     @DeleteMapping("/pharmacyId/{pharmacyId:[\\d]+}/medicineId/{medicineId:[\\d]+}")

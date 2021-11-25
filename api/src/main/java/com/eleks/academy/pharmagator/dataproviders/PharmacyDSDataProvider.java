@@ -35,6 +35,12 @@ public class PharmacyDSDataProvider implements DataProvider {
     @Value("${pharmagator.data-providers.apteka-ds.pharmacy-name}")
     private String pharmacyName;
 
+    @Value("${pharmagator.data-providers.apteka-ds.limiting-pages}")
+    private Long pageLimit;
+
+    @Value("${pharmagator.data-providers.apteka-ds.limiting-products-per-page}")
+    private Long productsPerPageLimit;
+
     @Override
     public Stream<MedicineDto> loadData() {
         return this.fetchCategories().stream()
@@ -52,12 +58,9 @@ public class PharmacyDSDataProvider implements DataProvider {
     }
 
     private Stream<MedicineDto> fetchMedicinesByCategory(String category) {
-
-        Long pageSize = 100L;
-
         FilterRequest filterRequest = FilterRequest.builder()
                 .page(1L)
-                .per(100L)
+                .per(productsPerPageLimit)
                 .build();
 
         DSMedicinesResponse dsMedicinesResponse = this.dsClient.post()
@@ -70,7 +73,9 @@ public class PharmacyDSDataProvider implements DataProvider {
         Long total;
         if (dsMedicinesResponse != null) {
             total = dsMedicinesResponse.getTotal();
-            long pageCount = total / pageSize;
+            long pageCount = total / productsPerPageLimit;
+
+            pageCount = pageCount > pageLimit ? pageLimit : pageCount;
 
             List<DSMedicinesResponse> responseList = new ArrayList<>();
             long page = 1L;
@@ -79,7 +84,7 @@ public class PharmacyDSDataProvider implements DataProvider {
                         .uri(categoryPath + "/" + category)
                         .body(Mono.just(FilterRequest.builder()
                                 .page(page)
-                                .per(pageSize)
+                                .per(productsPerPageLimit)
                                 .build()), FilterRequest.class)
                         .retrieve()
                         .bodyToMono(DSMedicinesResponse.class)

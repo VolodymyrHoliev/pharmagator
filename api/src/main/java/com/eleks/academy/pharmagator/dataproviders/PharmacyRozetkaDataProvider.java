@@ -48,12 +48,16 @@ public class PharmacyRozetkaDataProvider implements DataProvider {
     @Value("${pharmagator.data-providers.apteka-rozetka.pharmacy-name}")
     private String pharmacyName;
 
+    @Value("${pharmagator.data-providers.apteka-rozetka.page-limit}")
+    private Long pageLimit;
+
     @Override
     public Stream<MedicineDto> loadData() {
         return Stream.iterate(1, page -> page + 1)
+                .limit(pageLimit)
                 .map(this::fetchProductIds)
-                .takeWhile(response -> response.map(RozetkaProductIdsResponseData::getShowNext).get() != 0)
-                .map(Optional::get)
+                .flatMap(Optional::stream)
+                .takeWhile(response -> response.getShowNext() != 0)
                 .map(RozetkaProductIdsResponseData::getIds)
                 .flatMap(this::fetchProducts);
     }
@@ -69,7 +73,8 @@ public class PharmacyRozetkaDataProvider implements DataProvider {
                 .bodyToMono(new ParameterizedTypeReference<RozetkaProductIdsResponse>() {
                 })
                 .block();
-        return Optional.ofNullable(productIds.getData());
+        return Optional.ofNullable(productIds)
+                .map(RozetkaProductIdsResponse::getData);
     }
 
     private Stream<MedicineDto> fetchProducts(List<Long> productIdsList) {

@@ -4,7 +4,9 @@ import com.eleks.academy.pharmagator.dataproviders.dto.input.MedicineDto;
 import com.eleks.academy.pharmagator.entities.Medicine;
 import com.eleks.academy.pharmagator.repositories.MedicineRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,6 +14,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class MedicineServiceImpl implements MedicineService {
 
     private final MedicineRepository medicineRepository;
@@ -43,8 +46,12 @@ public class MedicineServiceImpl implements MedicineService {
                 });
     }
 
-    public void delete(Long id) {
-        medicineRepository.deleteById(id);
+    public void deleteById(Long id) {
+        try {
+            medicineRepository.deleteById(id);
+        } catch (EmptyResultDataAccessException exception) {
+            log.info(exception.getMessage(), exception);
+        }
     }
 
 }
