@@ -45,12 +45,11 @@ public class AptslavDataProvider implements DataProvider {
         return fetchMedicines(RECOMMENDED_CALLS_LIMIT);
     }
 
-
     /**
      * Here in this method we`re sending GET requests to the API until we`ve read all available data
-     * While API`s 'take' parameter can`t be more than 100,we can`t fetch all available data in one
+     * While API`s 'take' parameter can`t be more than 100, we can`t fetch all available data in one
      * request
-     * For now we`re taking only those products,which are in medicines category
+     * For now we`re taking only those products, which are in medicines category
      *
      * @return Stream<MedicineDto>
      */
@@ -81,9 +80,7 @@ public class AptslavDataProvider implements DataProvider {
      * @see AptslavResponseBody
      */
     private AptslavResponseBody<AptslavMedicineDto> sendGetMedicinesRequest(int step, int skip) {
-        return aptslavWebClient
-                .get()
-                .uri(uriBuilder -> uriBuilder.path(medicinesFetchUri)
+        return aptslavWebClient.get().uri(uriBuilder -> uriBuilder.path(medicinesFetchUri)
                         .queryParam("fields", "id,externalId,name,created,manufacturer")
                         .queryParam("take", step)
                         .queryParam("skip", skip)

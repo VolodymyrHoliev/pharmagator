@@ -13,4 +13,5 @@ public class PharmagatorControllerAdvice {
     public void handleAptslavApiException(ResponseBodyIsNullException exception) {
         log.error(exception.getMessage());
     }
+
 }

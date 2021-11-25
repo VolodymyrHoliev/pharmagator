@@ -98,11 +98,9 @@ class AptslavDataProviderIT {
 
         ObjectMapper objectMapper = new ObjectMapper();
 
-        mockWebServer.enqueue(
-                new MockResponse().setResponseCode(200)
+        mockWebServer.enqueue(new MockResponse().setResponseCode(200)
                         .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                        .setBody(objectMapper.writeValueAsString(responseBody))
-        );
+                        .setBody(objectMapper.writeValueAsString(responseBody)));
 
         ReflectionTestUtils.invokeMethod(subject, "sendGetMedicinesRequest", 100, 10);
 
@@ -112,8 +110,7 @@ class AptslavDataProviderIT {
 
         assertTrue(request.getPath().startsWith(BASE_URL));
 
-        assertEquals("id,externalId,name,created,manufacturer",
-                getQueryParameter(request, "fields"));
+        assertEquals("id,externalId,name,created,manufacturer", getQueryParameter(request, "fields"));
 
         assertEquals("100", getQueryParameter(request, "take"));
 
@@ -124,29 +121,24 @@ class AptslavDataProviderIT {
 
     @Test
     void sendGetMedicinesRequest_bodyIsNull_ResponseBodyIsNullException() {
-        mockWebServer.enqueue(
-                new MockResponse().setResponseCode(200)
-                        .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-        );
+        mockWebServer.enqueue(new MockResponse().setResponseCode(200)
+                        .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE));
 
-        String exceptionMessage = assertThrows(ResponseBodyIsNullException.class, () ->
-                ReflectionTestUtils.invokeMethod(subject, "sendGetMedicinesRequest", 100, 10))
-                .getMessage();
+        String exceptionMessage = assertThrows(ResponseBodyIsNullException.class, () -> ReflectionTestUtils.invokeMethod(subject, "sendGetMedicinesRequest", 100, 10)).getMessage();
+
         assertEquals("Response body is null", exceptionMessage);
     }
 
     @Test
     void calculateTotalPages_ok_multipleOf100() {
-        Long pagesCount = ReflectionTestUtils
-                .invokeMethod(subject, "calculateTotalPages", 500L);
+        Long pagesCount = ReflectionTestUtils.invokeMethod(subject, "calculateTotalPages", 500L);
 
         assertEquals(5, pagesCount);
     }
 
     @Test
     void calculateTotalPages_ok_notMultipleOf100() {
-        Long pagesCount = ReflectionTestUtils
-                .invokeMethod(subject, "calculateTotalPages", 594L);
+        Long pagesCount = ReflectionTestUtils.invokeMethod(subject, "calculateTotalPages", 594L);
 
         assertEquals(6, pagesCount);
     }
@@ -178,11 +170,9 @@ class AptslavDataProviderIT {
 
         ObjectMapper objectMapper = new ObjectMapper();
 
-        mockWebServer.enqueue(
-                new MockResponse().setResponseCode(200)
+        mockWebServer.enqueue(new MockResponse().setResponseCode(200)
                         .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                        .setBody(objectMapper.writeValueAsString(responseBody))
-        );
+                        .setBody(objectMapper.writeValueAsString(responseBody)));
 
         subject.loadData();
 
@@ -192,8 +182,7 @@ class AptslavDataProviderIT {
 
         assertTrue(request.getPath().startsWith(BASE_URL));
 
-        assertEquals("id,externalId,name,created,manufacturer",
-                getQueryParameter(request, "fields"));
+        assertEquals("id,externalId,name,created,manufacturer", getQueryParameter(request, "fields"));
 
         assertEquals("100", getQueryParameter(request, "take"));
 
