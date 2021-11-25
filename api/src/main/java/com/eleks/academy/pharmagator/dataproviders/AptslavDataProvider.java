@@ -69,9 +69,9 @@ public class AptslavDataProvider implements DataProvider {
     }
 
     /**
-     * @param step - how many objects we can retrieve,represents API`s 'take' parameter.
+     * @param step - how many objects we can retrieve, represents API`s 'take' parameter.
      *             According to API, max value is 100,default value is 5
-     * @param skip - how many objects we already have,represents API`s 'skip' parameter
+     * @param skip - how many objects we already have, represents API`s 'skip' parameter
      * @return AptslavResponseBody<AptslavMedicineDto>
      * @see AptslavResponseBody
      */

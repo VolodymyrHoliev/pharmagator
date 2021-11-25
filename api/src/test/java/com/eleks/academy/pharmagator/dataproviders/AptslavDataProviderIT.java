@@ -1,6 +1,5 @@
 package com.eleks.academy.pharmagator.dataproviders;
 
-
 import com.eleks.academy.pharmagator.dataproviders.dto.aptslav.AptslavPriceDto;
 import com.eleks.academy.pharmagator.dataproviders.dto.aptslav.AptslavResponseBody;
 import com.eleks.academy.pharmagator.dataproviders.dto.aptslav.AptslavResponseEntity;
