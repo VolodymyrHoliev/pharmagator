@@ -33,7 +33,6 @@ public class DataProvidersConfig {
     @Value("${pharmagator.data-providers.aptslav.base-url}")
     private String aptslavBaseUrl;
 
-
     @Bean(name = "pharmacyDSWebClient")
     public WebClient pharmacyDSWebClient() {
         return WebClient.builder()

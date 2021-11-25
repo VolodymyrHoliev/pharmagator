@@ -41,7 +41,6 @@ public class AptslavDataProvider implements DataProvider {
 
     private final ApiDtoConverter<AptslavMedicineDto> apiDtoConverter;
 
-
     @Override
     public Stream<MedicineDto> loadData() {
         return fetchMedicines(apiCallsLimit);
@@ -77,7 +76,7 @@ public class AptslavDataProvider implements DataProvider {
      */
     private AptslavResponseBody<AptslavMedicineDto> sendGetMedicinesRequest(int step, int skip) {
         return aptslavWebClient.get().uri(uriBuilder -> uriBuilder.path(medicinesFetchUri)
-                        .queryParam("fields", "id,externalId,name,created,manufacturer")
+                        .queryParam("fields", "id, externalId, name, created, manufacturer")
                         .queryParam("take", step)
                         .queryParam("skip", skip)
                         .queryParam("inStock", true)
