@@ -15,6 +15,7 @@ pharmagator:
   data-providers:
     aptslav:
       title: apteka-slavutych
+      api-calls-limit: 3
       base-url: https://aptslav.com.ua:3000/api/v1
       categories-url: /categories
       medicines-uri: /categories/87/products

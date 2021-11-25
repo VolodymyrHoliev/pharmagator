@@ -130,20 +130,6 @@ class AptslavDataProviderIT {
     }
 
     @Test
-    void calculateTotalPages_ok_multipleOf100() {
-        Long pagesCount = ReflectionTestUtils.invokeMethod(subject, "calculateTotalPages", 500L);
-
-        assertEquals(5, pagesCount);
-    }
-
-    @Test
-    void calculateTotalPages_ok_notMultipleOf100() {
-        Long pagesCount = ReflectionTestUtils.invokeMethod(subject, "calculateTotalPages", 594L);
-
-        assertEquals(6, pagesCount);
-    }
-
-    @Test
     void fetchMedicines_ok() throws JsonProcessingException, InterruptedException {
         AptslavResponseEntity responseEntity = AptslavResponseEntity.builder()
                 .externalId("123")

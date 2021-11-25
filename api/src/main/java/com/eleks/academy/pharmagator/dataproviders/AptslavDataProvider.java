@@ -66,12 +66,6 @@ public class AptslavDataProvider implements DataProvider {
                 .map(apiDtoConverter::toMedicineDto);
     }
 
-    private long calculateTotalPages(long dataSetCount) {
-        long totalPages = dataSetCount / pageSize;
-
-        return dataSetCount % pageSize == 0 ? totalPages : totalPages + 1;
-    }
-
     /**
      * @param step - how many objects we can retrieve,represents API`s 'take' parameter.
      *             According to API, max value is 100,default value is 5
