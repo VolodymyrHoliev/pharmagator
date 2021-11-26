@@ -9,4 +9,8 @@ public interface AdvancedSearchService {
 
     Page<AdvancedSearchView> search(AdvancedSearchRequest request, Pageable pageable);
 
+    void refreshView();
+
+    Page<AdvancedSearchView> findAll(Pageable pageable);
+
 }
