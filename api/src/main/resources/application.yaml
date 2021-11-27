@@ -12,6 +12,8 @@ spring:
           extra_physical_table_types: MATERIALIZED VIEW
 
 pharmagator:
+  ui:
+    default-page-size: 10
   data-providers:
     aptslav:
       title: apteka-slavutych
