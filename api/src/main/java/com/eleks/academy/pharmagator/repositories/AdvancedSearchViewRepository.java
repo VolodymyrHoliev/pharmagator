@@ -15,7 +15,7 @@ public interface AdvancedSearchViewRepository extends JpaRepository<AdvancedSear
 
     @Modifying
     @Transactional
-    @Query(value = "REFRESH MATERIALIZED VIEW advanced_search_view", nativeQuery = true)
+    @Query(value = "REFRESH MATERIALIZED VIEW advanced_search_view;", nativeQuery = true)
     void refreshView();
 
 }
