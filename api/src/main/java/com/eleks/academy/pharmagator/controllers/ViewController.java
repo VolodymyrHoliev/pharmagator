@@ -30,6 +30,8 @@ public class ViewController {
 
         long pagesCount = advancedSearchService.getPagesCount(defaultPageSize);
 
+        page = Math.toIntExact(page > pagesCount ? pagesCount : page);
+
         model.addAttribute("itemsList", items);
 
         model.addAttribute("pagesCount", pagesCount);
