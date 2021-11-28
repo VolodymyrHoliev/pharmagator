@@ -23,6 +23,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -178,4 +179,16 @@ class AptslavDataProviderIT {
         assertEquals("true", getQueryParameter(request, "inStock"));
     }
 
+    @Test
+    void badRequestToApi_WebClientResponseException(){
+
+        mockWebServer.enqueue(new MockResponse().setResponseCode(500)
+                .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE));
+
+        WebClientResponseException exception = assertThrows(WebClientResponseException.class, () -> subject.loadData());
+
+        String message = exception.getMessage();
+
+        assertTrue(message.startsWith("500 Internal Server Error from GET"));
+    }
 }
