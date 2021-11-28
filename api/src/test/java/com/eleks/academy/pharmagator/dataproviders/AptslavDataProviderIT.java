@@ -5,6 +5,7 @@ import com.eleks.academy.pharmagator.dataproviders.dto.aptslav.AptslavResponseBo
 import com.eleks.academy.pharmagator.dataproviders.dto.aptslav.AptslavResponseEntity;
 import com.eleks.academy.pharmagator.dataproviders.dto.aptslav.ResponseBodyIsNullException;
 import com.eleks.academy.pharmagator.dataproviders.dto.aptslav.converters.ApiMedicineDtoConverter;
+import com.eleks.academy.pharmagator.dataproviders.dto.aptslav.exceptions.AptslavApiException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.HttpUrl;
@@ -178,4 +179,14 @@ class AptslavDataProviderIT {
         assertEquals("true", getQueryParameter(request, "inStock"));
     }
 
+    @Test
+    void badRequestToApi_AptslavApiException(){
+
+        mockWebServer.enqueue(new MockResponse().setResponseCode(500)
+                .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE));
+
+        String message = assertThrows(AptslavApiException.class, () -> subject.loadData()).getMessage();
+
+        assertTrue(message.startsWith("500 Internal Server Error from GET"));
+    }
 }

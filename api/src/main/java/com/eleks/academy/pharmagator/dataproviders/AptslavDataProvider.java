@@ -5,12 +5,14 @@ import com.eleks.academy.pharmagator.dataproviders.dto.aptslav.AptslavMedicineDt
 import com.eleks.academy.pharmagator.dataproviders.dto.aptslav.AptslavResponseBody;
 import com.eleks.academy.pharmagator.dataproviders.dto.aptslav.ResponseBodyIsNullException;
 import com.eleks.academy.pharmagator.dataproviders.dto.aptslav.converters.ApiDtoConverter;
+import com.eleks.academy.pharmagator.dataproviders.dto.aptslav.exceptions.AptslavApiException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 import java.util.Collection;
 import java.util.stream.LongStream;
@@ -43,7 +45,11 @@ public class AptslavDataProvider implements DataProvider {
 
     @Override
     public Stream<MedicineDto> loadData() {
-        return fetchMedicines(apiCallsLimit);
+        try {
+            return fetchMedicines(apiCallsLimit);
+        }catch (WebClientResponseException e){
+            throw new AptslavApiException(e);
+        }
     }
 
     /**
