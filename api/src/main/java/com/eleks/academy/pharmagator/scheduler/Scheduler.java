@@ -1,7 +1,7 @@
 package com.eleks.academy.pharmagator.scheduler;
 
 import com.eleks.academy.pharmagator.dataproviders.DataProvider;
-import com.eleks.academy.pharmagator.repositories.AdvancedSearchViewRepository;
+import com.eleks.academy.pharmagator.services.AdvancedSearchService;
 import com.eleks.academy.pharmagator.services.ImportService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +23,7 @@ public class Scheduler {
 
     private final ImportService importService;
 
-    private final AdvancedSearchViewRepository advancedSearchViewRepository;
+    private final AdvancedSearchService advancedSearchService;
 
     @Scheduled(fixedDelay = 100, timeUnit = TimeUnit.MINUTES)
     public void schedule() {
@@ -33,7 +33,7 @@ public class Scheduler {
                 .forEach(importService::storeToDatabase);
         log.info("Scheduler finished at {}", Instant.now());
 
-        advancedSearchViewRepository.refreshView();
+        advancedSearchService.refreshView();
     }
 
 }
