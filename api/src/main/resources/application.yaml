@@ -13,7 +13,7 @@ spring:
 
 pharmagator:
   ui:
-    default-page-size: 10
+    default-page-size: 30
   data-providers:
     aptslav:
       title: apteka-slavutych
