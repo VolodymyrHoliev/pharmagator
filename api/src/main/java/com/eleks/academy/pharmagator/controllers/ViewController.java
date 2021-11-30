@@ -1,16 +1,24 @@
 package com.eleks.academy.pharmagator.controllers;
 
+import com.eleks.academy.pharmagator.controllers.dto.AdvancedSearchRequest;
+import com.eleks.academy.pharmagator.controllers.dto.SearchRequest;
 import com.eleks.academy.pharmagator.entities.AdvancedSearchView;
 import com.eleks.academy.pharmagator.services.AdvancedSearchService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @Slf4j
@@ -23,20 +31,51 @@ public class ViewController {
     private final AdvancedSearchService advancedSearchService;
 
     @GetMapping("/{page}")
-    public String loadPage(Model model, @PathVariable Integer page) {
-        page = page < 0 ? 0 : page;
+    public String searchMedicines(@PathVariable Integer page,
+                                @ModelAttribute(value = "searchRequest") SearchRequest request,
+                                Model model) {
+        AdvancedSearchRequest advancedSearchRequest = new AdvancedSearchRequest();
 
-        Page<AdvancedSearchView> items = advancedSearchService.findAll(Pageable.ofSize(defaultPageSize));
+        advancedSearchRequest.setMedicine(request.getSearchQuery());
 
-        long pagesCount = advancedSearchService.getPagesCount(defaultPageSize);
+        PageRequest pageRequest = PageRequest.of(page, defaultPageSize, request.getSortDirection(), request.getSortBy());
 
-        page = Math.toIntExact(page > pagesCount ? pagesCount : page);
+        Page<AdvancedSearchView> search = advancedSearchService.search(advancedSearchRequest, pageRequest);
+
+        List<AdvancedSearchView> list = search.get().collect(Collectors.toList());
+
+        model.addAttribute("itemsList", list);
+
+        model.addAttribute("currentPage", page);
+
+        model.addAttribute("pagesCount", search.getTotalPages() - 1);
+
+        model.addAttribute("searchRequest", request);
+
+        log.info(request.toString());
+
+        log.info("Current page = " + page + "; Pages count = " + search.getTotalPages());
+
+        return "index";
+    }
+
+    @GetMapping("/")
+    public String homePage(Model model,
+                           @RequestParam(required = false, defaultValue = "price") String sortBy,
+                           @RequestParam(required = false, defaultValue = "ASC") String order) {
+        PageRequest pageRequest = PageRequest.of(0, defaultPageSize, Sort.Direction.valueOf(order), sortBy);
+
+        Page<AdvancedSearchView> items = advancedSearchService.findAll(pageRequest);
+
+        int pagesCount = items.getTotalPages();
 
         model.addAttribute("itemsList", items);
 
         model.addAttribute("pagesCount", pagesCount);
 
-        model.addAttribute("currentPage", page);
+        model.addAttribute("currentPage", 0);
+
+        model.addAttribute("searchRequest", new SearchRequest());
 
         return "index";
     }
