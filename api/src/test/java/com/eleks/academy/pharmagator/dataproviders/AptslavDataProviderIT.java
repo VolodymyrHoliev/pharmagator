@@ -101,8 +101,8 @@ class AptslavDataProviderIT {
         ObjectMapper objectMapper = new ObjectMapper();
 
         mockWebServer.enqueue(new MockResponse().setResponseCode(200)
-                        .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                        .setBody(objectMapper.writeValueAsString(responseBody)));
+                .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .setBody(objectMapper.writeValueAsString(responseBody)));
 
         ReflectionTestUtils.invokeMethod(subject, "sendGetMedicinesRequest", 100, 10);
 
@@ -124,7 +124,7 @@ class AptslavDataProviderIT {
     @Test
     void sendGetMedicinesRequest_bodyIsNull_ResponseBodyIsNullException() {
         mockWebServer.enqueue(new MockResponse().setResponseCode(200)
-                        .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE));
+                .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE));
 
         String exceptionMessage = assertThrows(ResponseBodyIsNullException.class, () -> ReflectionTestUtils.invokeMethod(subject, "sendGetMedicinesRequest", 100, 10)).getMessage();
 
@@ -159,8 +159,8 @@ class AptslavDataProviderIT {
         ObjectMapper objectMapper = new ObjectMapper();
 
         mockWebServer.enqueue(new MockResponse().setResponseCode(200)
-                        .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                        .setBody(objectMapper.writeValueAsString(responseBody)));
+                .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .setBody(objectMapper.writeValueAsString(responseBody)));
 
         subject.loadData();
 
@@ -180,8 +180,7 @@ class AptslavDataProviderIT {
     }
 
     @Test
-    void badRequestToApi_WebClientResponseException(){
-
+    void badRequestToApi_WebClientResponseException() {
         mockWebServer.enqueue(new MockResponse().setResponseCode(500)
                 .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE));
 
@@ -191,4 +190,5 @@ class AptslavDataProviderIT {
 
         assertTrue(message.startsWith("500 Internal Server Error from GET"));
     }
+
 }

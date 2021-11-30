@@ -16,8 +16,7 @@ public class SchedulerConfig {
     private final ErrorHandler errorHandler;
 
     @Bean
-    public TaskScheduler taskScheduler(){
-
+    public TaskScheduler taskScheduler() {
         ConcurrentTaskScheduler taskScheduler = new ConcurrentTaskScheduler();
 
         taskScheduler.setErrorHandler(errorHandler);
