@@ -180,7 +180,7 @@ class AptslavDataProviderIT {
     }
 
     @Test
-    void badRequestToApi_AptslavApiException(){
+    void badRequestToApi_WebClientResponseException(){
 
         mockWebServer.enqueue(new MockResponse().setResponseCode(500)
                 .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE));
