@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Controller
 @Slf4j
@@ -42,7 +41,7 @@ public class ViewController {
 
         Page<AdvancedSearchView> search = advancedSearchService.search(advancedSearchRequest, pageRequest);
 
-        List<AdvancedSearchView> list = search.get().collect(Collectors.toList());
+        List<AdvancedSearchView> list = search.get().toList();
 
         model.addAttribute("itemsList", list);
 
