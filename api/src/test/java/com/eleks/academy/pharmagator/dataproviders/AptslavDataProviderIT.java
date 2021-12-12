@@ -112,7 +112,7 @@ class AptslavDataProviderIT {
 
         assertTrue(request.getPath().startsWith(BASE_URL));
 
-        assertEquals("id,externalId,name,created,manufacturer", getQueryParameter(request, "fields"));
+        assertEquals("id,externalId,name,created,manufacturer,registrationNumber", getQueryParameter(request, "fields"));
 
         assertEquals("100", getQueryParameter(request, "take"));
 
@@ -170,7 +170,7 @@ class AptslavDataProviderIT {
 
         assertTrue(request.getPath().startsWith(BASE_URL));
 
-        assertEquals("id,externalId,name,created,manufacturer", getQueryParameter(request, "fields"));
+        assertEquals("id,externalId,name,created,manufacturer,registrationNumber", getQueryParameter(request, "fields"));
 
         assertEquals("100", getQueryParameter(request, "take"));
 

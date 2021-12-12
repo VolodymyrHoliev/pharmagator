@@ -18,7 +18,7 @@ pharmagator:
   data-providers:
     pharmacy-slavutych:
       pharmacy-name: pharmacy-slavutych
-      api-calls-limit: 3
+      api-calls-limit: 1
       base-url: https://aptslav.com.ua:3000/api/v1
       categories-url: /categories
       medicines-uri: /categories/87/products
@@ -50,3 +50,5 @@ pharmagator:
       medicament-category-id: !!str 4628712
       pharmacy-name: pharmacy-rozetka
       page-limit: 5
+  drlz-registry:
+    medicine-fetch-url: http://drlz.com.ua/ibp/ddsite.nsf/all/shlist?opendocument&
