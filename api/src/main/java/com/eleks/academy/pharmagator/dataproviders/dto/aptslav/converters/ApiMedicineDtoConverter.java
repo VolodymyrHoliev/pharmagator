@@ -24,11 +24,14 @@ public class ApiMedicineDtoConverter implements ApiDtoConverter<AptslavMedicineD
 
         long externalId = apiDto.getId();
 
+        String registrationId = apiDto.getRegistrationNumber();
+
         return MedicineDto.builder()
                 .externalId(String.valueOf(externalId))
                 .title(title)
                 .price(aptslavPriceDto.getMin())
                 .pharmacyName(pharmacyTitle)
+                .registrationId(registrationId)
                 .build();
     }
 

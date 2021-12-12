@@ -1,7 +1,10 @@
 package com.eleks.academy.pharmagator.dataproviders.dto;
 
 import com.univocity.parsers.annotations.Parsed;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
@@ -22,5 +25,7 @@ public class MedicineDto {
 
     @Parsed(field = "pharmacyName")
     private String pharmacyName;
+
+    private String registrationId;
 
 }

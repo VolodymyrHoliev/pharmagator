@@ -23,4 +23,6 @@ public class AptslavMedicineDto {
 
     private Instant created;
 
+    private String registrationNumber;
+
 }

@@ -70,7 +70,7 @@ public class AptslavDataProvider implements DataProvider {
      */
     private AptslavResponseBody<AptslavMedicineDto> sendGetMedicinesRequest(int step, int skip) {
         return aptslavWebClient.get().uri(uriBuilder -> uriBuilder.path(medicinesFetchUri)
-                        .queryParam("fields", "id,externalId,name,created,manufacturer")
+                        .queryParam("fields", "id,externalId,name,created,manufacturer,registrationNumber")
                         .queryParam("take", step)
                         .queryParam("skip", skip)
                         .queryParam("inStock", true)
